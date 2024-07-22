@@ -22,13 +22,15 @@ var CLI struct {
 	Cache          cache.Cache                   `cmd:"" help:"Run commands on the cache"`
 	Version        version.Version               `cmd:"" help:"Print current version"`
 
-	Verbose bool `help:"Use verbose debug logging"`
+	ConfigPath string `help:"Override which config path to use"`
+	Verbose    bool   `help:"Use verbose debug logging"`
 }
 
 func main() {
 	ctx := kong.Parse(&CLI)
 
 	config, err := config.New(
+		config.OptionSetConfigPath(CLI.ConfigPath),
 		config.OptionSetVerbose(CLI.Verbose),
 	)
 	if err != nil {
