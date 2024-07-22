@@ -9,6 +9,7 @@ import (
 	"runtime"
 
 	"github.com/bashidogames/gdvm/internal/platform"
+	"github.com/bashidogames/gdvm/internal/utils"
 )
 
 const CONFIG_FILENAME = "config.json"
@@ -33,6 +34,10 @@ func (c *Config) Reset() error {
 }
 
 func (c *Config) Save() error {
+	if c.Verbose {
+		utils.Printlnf("Attempting to save config: %s", c.ConfigPath)
+	}
+
 	err := os.MkdirAll(filepath.Dir(c.ConfigPath), os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
@@ -52,6 +57,10 @@ func (c *Config) Save() error {
 }
 
 func (c *Config) load() error {
+	if c.Verbose {
+		utils.Printlnf("Attempting to load config: %s", c.ConfigPath)
+	}
+
 	file, err := os.Open(c.ConfigPath)
 	if os.IsNotExist(err) {
 		return nil

@@ -34,7 +34,7 @@ func (s Service) List() error {
 		return nil
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to iterate fields: %w", err)
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (s Service) Set(key string, value string) error {
 		return nil
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to find field: %w", err)
 	}
 
 	err = s.Config.Save()
@@ -64,7 +64,7 @@ func (s Service) Get(key string) error {
 		return nil
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to find field: %w", err)
 	}
 
 	return nil
@@ -88,7 +88,7 @@ func (s Service) iterateFields(callback func(reflect.Value, string) error) error
 		name := parts[0]
 		err := callback(field, name)
 		if err != nil {
-			return err
+			return fmt.Errorf("iterate fields callback failed: %w", err)
 		}
 	}
 
@@ -104,14 +104,14 @@ func (s Service) findField(key string, callback func(reflect.Value, string) erro
 
 		err := callback(field, name)
 		if err != nil {
-			return err
+			return fmt.Errorf("find field callback failed: %w", err)
 		}
 
 		found = true
 		return nil
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to iterate fields: %w", err)
 	}
 
 	if !found {
