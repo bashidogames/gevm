@@ -162,7 +162,9 @@ type Option func(*Config)
 
 func OptionSetConfigPath(configPath string) Option {
 	return func(config *Config) {
-		config.ConfigPath = configPath
+		if len(configPath) > 0 {
+			config.ConfigPath = configPath
+		}
 	}
 }
 
