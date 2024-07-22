@@ -8,12 +8,14 @@ import (
 	"github.com/bashidogames/gdvm/internal/github"
 	"github.com/bashidogames/gdvm/internal/services/cache"
 	"github.com/bashidogames/gdvm/internal/services/godot"
+	"github.com/bashidogames/gdvm/internal/services/settings"
 	"github.com/bashidogames/gdvm/internal/services/versions"
 )
 
 type App struct {
 	Versions *versions.Service
 	Godot    *godot.Service
+	Settings *settings.Service
 	Cache    *cache.Service
 }
 
@@ -26,6 +28,7 @@ func New(config *config.Config) (*App, error) {
 	return &App{
 		Versions: versions.New(environment, config),
 		Godot:    godot.New(environment, config),
+		Settings: settings.New(config),
 		Cache:    cache.New(config),
 	}, nil
 }

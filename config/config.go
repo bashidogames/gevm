@@ -1,7 +1,9 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -9,12 +11,67 @@ import (
 	"github.com/bashidogames/gdvm/internal/platform"
 )
 
-type Config struct {
-	GodotRootDirectory string
-	CacheDirectory     string
+const CONFIG_FILENAME = "config.json"
 
-	Platform platform.Platform
-	Verbose  bool
+type Config struct {
+	GodotRootDirectory string `json:"godot-root-directory,omitempty"`
+	CacheDirectory     string `json:"cache-directory,omitempty"`
+
+	ConfigPath string            `json:"-"`
+	Platform   platform.Platform `json:"-"`
+	Verbose    bool              `json:"-"`
+}
+
+func (c *Config) Reset() error {
+	config, err := DefaultConfig()
+	if err != nil {
+		return fmt.Errorf("could not create default config: %w", err)
+	}
+
+	*c = *config
+	return nil
+}
+
+func (c *Config) Save() error {
+	err := os.MkdirAll(filepath.Dir(c.ConfigPath), os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("cannot make directory: %w", err)
+	}
+
+	bytes, err := json.MarshalIndent(c, "", "	")
+	if err != nil {
+		return fmt.Errorf("cannot parse config: %w", err)
+	}
+
+	err = os.WriteFile(c.ConfigPath, bytes, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("cannot write config: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Config) load() error {
+	file, err := os.Open(c.ConfigPath)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return fmt.Errorf("cannot open config: %w", err)
+	}
+	defer file.Close()
+
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return fmt.Errorf("cannot read config: %w", err)
+	}
+
+	err = json.Unmarshal(bytes, c)
+	if err != nil {
+		return fmt.Errorf("cannot parse config: %w", err)
+	}
+
+	return nil
 }
 
 func DefaultGodotRootDirectory() (string, error) {
@@ -35,6 +92,17 @@ func DefaultCacheDirectory() (string, error) {
 
 	directory := filepath.Join(userCacheDir, "bashidogames", "gdvm")
 	return directory, nil
+}
+
+func ConfigPath() (string, error) {
+	root, err := os.UserConfigDir()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine user config directory: %w", err)
+	}
+
+	directory := filepath.Join(root, "bashidogames", "gdvm")
+	path := filepath.Join(directory, CONFIG_FILENAME)
+	return path, nil
 }
 
 func Platform() (platform.Platform, error) {
@@ -82,6 +150,11 @@ func DefaultConfig() (*Config, error) {
 		return nil, fmt.Errorf("cannot get default cache directory: %w", err)
 	}
 
+	configPath, err := ConfigPath()
+	if err != nil {
+		return nil, fmt.Errorf("cannot get config path: %w", err)
+	}
+
 	platform, err := Platform()
 	if err != nil {
 		return nil, fmt.Errorf("could not determine platform: %w", err)
@@ -90,8 +163,10 @@ func DefaultConfig() (*Config, error) {
 	return &Config{
 		GodotRootDirectory: defaultGodotRootDirectory,
 		CacheDirectory:     defaultCacheDirectory,
-		Platform:           platform,
-		Verbose:            false,
+
+		ConfigPath: configPath,
+		Platform:   platform,
+		Verbose:    false,
 	}, nil
 }
 
@@ -105,10 +180,26 @@ func New(options ...Option) (*Config, error) {
 		option(config)
 	}
 
+	err = config.load()
+	if err != nil {
+		return nil, fmt.Errorf("could not load config: %w", err)
+	}
+
+	err = config.Save()
+	if err != nil {
+		return nil, fmt.Errorf("cannot save config: %w", err)
+	}
+
 	return config, nil
 }
 
 type Option func(*Config)
+
+func OptionSetConfigPath(configPath string) Option {
+	return func(config *Config) {
+		config.ConfigPath = configPath
+	}
+}
 
 func OptionSetVerbose(verbose bool) Option {
 	return func(config *Config) {
