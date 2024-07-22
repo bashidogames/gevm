@@ -16,7 +16,7 @@ import (
 
 var CLI struct {
 	BuildTemplates buildtemplates.BuildTemplates `cmd:"" help:"Run commands related to the build templates"`
-	Godot          godot.Godot                   `cmd:"" help:"Run commands related to the godot engine"`
+	Godot          godot.Godot                   `cmd:"" help:"Run commands related to the godot engine" default:"withargs"`
 	Versions       versions.Versions             `cmd:"" help:"View available versions for download"`
 	Settings       settings.Settings             `cmd:"" help:"Reset, list, set and get config values"`
 	Cache          cache.Cache                   `cmd:"" help:"Run commands on the cache"`
