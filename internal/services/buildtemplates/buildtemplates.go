@@ -1,4 +1,4 @@
-package godot
+package buildtemplates
 
 import (
 	"errors"
@@ -15,7 +15,8 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-const CACHE_FOLDER = "godot"
+const CACHE_FOLDER = "build-templates"
+const TEMP_FOLDER = "templates"
 
 type Service struct {
 	Environment *environment.Environment
@@ -24,12 +25,12 @@ type Service struct {
 
 func (s *Service) Download(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to download '%s' godot...", semver)
+		utils.Printlnf("Attempting to download '%s' build templates...", semver)
 	}
 
-	asset, err := s.Environment.FetchGodotAsset(semver)
+	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil
 	}
 	if err != nil {
@@ -44,7 +45,7 @@ func (s *Service) Download(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Godot '%s' already downloaded", semver)
+		utils.Printlnf("Build templates '%s' already downloaded", semver)
 		return nil
 	}
 
@@ -55,20 +56,20 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	utils.Printlnf("Godot '%s' downloaded", semver)
+	utils.Printlnf("Build templates '%s' downloaded", semver)
 	return nil
 }
 
 func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to uninstall '%s' godot...", semver)
+		utils.Printlnf("Attempting to uninstall '%s' build templates...", semver)
 	}
 
 	targetDirectory := s.targetDirectory(semver)
@@ -80,7 +81,7 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			utils.Printlnf("Godot '%s' not found", semver)
+			utils.Printlnf("Build templates '%s' not found", semver)
 		}
 
 		return nil
@@ -95,18 +96,18 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	utils.Printlnf("Godot '%s' uninstalled", semver)
+	utils.Printlnf("Build templates '%s' uninstalled", semver)
 	return nil
 }
 
 func (s *Service) Install(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to install '%s' godot...", semver)
+		utils.Printlnf("Attempting to install '%s' build templates...", semver)
 	}
 
-	asset, err := s.Environment.FetchGodotAsset(semver)
+	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil
 	}
 	if err != nil {
@@ -115,6 +116,8 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	targetDirectory := s.targetDirectory(semver)
 	archivePath := s.archivePath(asset.Name)
+	tempDirectory := s.tempDirectory()
+	rootDirectory := s.rootDirectory()
 
 	exists, err := utils.DoesExist(targetDirectory)
 	if err != nil {
@@ -122,11 +125,11 @@ func (s *Service) Install(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Godot '%s' already installed", semver)
+		utils.Printlnf("Build templates '%s' already installed", semver)
 		return nil
 	}
 
-	err = os.MkdirAll(s.Config.GodotRootDirectory, os.ModePerm)
+	err = os.MkdirAll(s.Config.BuildTemplatesRootDirectory, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
 	}
@@ -136,6 +139,11 @@ func (s *Service) Install(semver semver.Semver) error {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
+	err = os.RemoveAll(tempDirectory)
+	if err != nil {
+		return fmt.Errorf("cannot remove temp directory: %w", err)
+	}
+
 	if s.Config.Verbose {
 		utils.Printlnf("Downloading from: %s", asset.DownloadURL)
 		utils.Printlnf("Downloading to: %s", archivePath)
@@ -143,7 +151,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil
 	}
 	if err != nil {
@@ -152,26 +160,36 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	if s.Config.Verbose {
 		utils.Printlnf("Unzipping from: %s", archivePath)
-		utils.Printlnf("Unzipping to: %s", targetDirectory)
+		utils.Printlnf("Unzipping to: %s", rootDirectory)
 	}
 
-	err = archiving.Unzip(archivePath, targetDirectory)
+	err = archiving.Unzip(archivePath, rootDirectory)
 	if err != nil {
 		return fmt.Errorf("unzip failed: %w", err)
 	}
 
-	utils.Printlnf("Godot '%s' installed", semver)
+	if s.Config.Verbose {
+		utils.Printlnf("Moving from: %s", tempDirectory)
+		utils.Printlnf("Moving to: %s", targetDirectory)
+	}
+
+	err = os.Rename(tempDirectory, targetDirectory)
+	if err != nil {
+		return fmt.Errorf("move failed: %w", err)
+	}
+
+	utils.Printlnf("Build templates '%s' installed", semver)
 	return nil
 }
 
 func (s *Service) List() error {
-	entries, err := os.ReadDir(s.Config.GodotRootDirectory)
+	entries, err := os.ReadDir(s.Config.BuildTemplatesRootDirectory)
 	if !errors.Is(err, os.ErrNotExist) && err != nil {
-		return fmt.Errorf("cannot read godot root directory: %w", err)
+		return fmt.Errorf("cannot read build templates root directory: %w", err)
 	}
 
 	if len(entries) == 0 {
-		utils.Printlnf("No godot versions installed")
+		utils.Printlnf("No build templates installed")
 		return nil
 	}
 
@@ -206,11 +224,19 @@ func (s *Service) List() error {
 }
 
 func (s *Service) targetDirectory(semver semver.Semver) string {
-	return filepath.Join(s.Config.GodotRootDirectory, semver.String())
+	return filepath.Join(s.Config.BuildTemplatesRootDirectory, semver.String())
 }
 
 func (s *Service) archivePath(name string) string {
 	return filepath.Join(s.Config.CacheDirectory, CACHE_FOLDER, name)
+}
+
+func (s *Service) tempDirectory() string {
+	return filepath.Join(s.Config.BuildTemplatesRootDirectory, TEMP_FOLDER)
+}
+
+func (s *Service) rootDirectory() string {
+	return s.Config.BuildTemplatesRootDirectory
 }
 
 func New(environment *environment.Environment, config *config.Config) *Service {

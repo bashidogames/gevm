@@ -5,6 +5,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/bashidogames/gdvm"
+	"github.com/bashidogames/gdvm/cmd/gdvm/buildtemplates"
 	"github.com/bashidogames/gdvm/cmd/gdvm/cache"
 	"github.com/bashidogames/gdvm/cmd/gdvm/godot"
 	"github.com/bashidogames/gdvm/cmd/gdvm/settings"
@@ -14,11 +15,12 @@ import (
 )
 
 var CLI struct {
-	Godot    godot.Godot       `cmd:"" help:"Run commands related to the godot engine"`
-	Versions versions.Versions `cmd:"" help:"View available versions for download"`
-	Settings settings.Settings `cmd:"" help:"Reset, list, set and get config values"`
-	Cache    cache.Cache       `cmd:"" help:"Run commands on the cache"`
-	Version  version.Version   `cmd:"" help:"Print current version"`
+	BuildTemplates buildtemplates.BuildTemplates `cmd:"" help:"Run commands related to the build templates"`
+	Godot          godot.Godot                   `cmd:"" help:"Run commands related to the godot engine"`
+	Versions       versions.Versions             `cmd:"" help:"View available versions for download"`
+	Settings       settings.Settings             `cmd:"" help:"Reset, list, set and get config values"`
+	Cache          cache.Cache                   `cmd:"" help:"Run commands on the cache"`
+	Version        version.Version               `cmd:"" help:"Print current version"`
 
 	Verbose bool `help:"Use verbose debug logging"`
 }

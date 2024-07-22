@@ -19,7 +19,7 @@ func (s *Service) Clear() error {
 
 	err := os.RemoveAll(s.Config.CacheDirectory)
 	if err != nil {
-		return fmt.Errorf("cannot remove directory: %w", err)
+		return fmt.Errorf("cannot remove cache directory: %w", err)
 	}
 
 	utils.Printlnf("Cache cleared")

@@ -1,5 +1,10 @@
 package platform
 
+import (
+	"fmt"
+	"runtime"
+)
+
 type Platform string
 
 const (
@@ -26,4 +31,38 @@ var Platforms = []Platform{
 	DarwinArm64,
 	DarwinAmd64,
 	Darwin386,
+}
+
+func Get() (Platform, error) {
+	switch runtime.GOOS {
+	case "windows":
+		switch runtime.GOARCH {
+		case "amd64":
+			return WindowsAmd64, nil
+		case "386":
+			return Windows386, nil
+		}
+	case "linux":
+		switch runtime.GOARCH {
+		case "arm64":
+			return LinuxArm64, nil
+		case "amd64":
+			return LinuxAmd64, nil
+		case "arm":
+			return LinuxArm, nil
+		case "386":
+			return Linux386, nil
+		}
+	case "darwin":
+		switch runtime.GOARCH {
+		case "arm64":
+			return DarwinArm64, nil
+		case "amd64":
+			return DarwinAmd64, nil
+		case "386":
+			return Darwin386, nil
+		}
+	}
+
+	return "", fmt.Errorf("invalid platform")
 }

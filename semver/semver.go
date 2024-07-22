@@ -37,6 +37,10 @@ type Version struct {
 	Build    int
 }
 
+func (v Version) IsValid() bool {
+	return len(v.Original) != 0
+}
+
 func (a Version) Compare(b Version) int {
 	if result := cmp.Compare(a.Major, b.Major); result != 0 {
 		return result
@@ -81,10 +85,6 @@ func (v Version) String() string {
 	return v.Original
 }
 
-func (v Version) IsValid() bool {
-	return len(v.Original) != 0
-}
-
 func ParseVersion(version string) (Version, error) {
 	parts := VersionRegex.FindStringSubmatch(version)
 	if parts == nil {
@@ -127,6 +127,10 @@ type Release struct {
 	Meta     string
 }
 
+func (r Release) IsValid() bool {
+	return len(r.Original) != 0
+}
+
 func (a Release) Compare(b Release) int {
 	if result := cmp.Compare(Labels[a.Label], Labels[b.Label]); result != 0 {
 		return result
@@ -163,10 +167,6 @@ func (r Release) String() string {
 	return r.Original
 }
 
-func (r Release) IsValid() bool {
-	return len(r.Original) != 0
-}
-
 func ParseRelease(release string) (Release, error) {
 	parts := ReleaseRegex.FindStringSubmatch(release)
 	if parts == nil {
@@ -198,6 +198,10 @@ type Relver struct {
 	Release Release
 }
 
+func (r Relver) IsValid() bool {
+	return r.Version.IsValid() && r.Release.IsValid()
+}
+
 func (a Relver) Compare(b Relver) int {
 	if result := a.Version.Compare(b.Version); result != 0 {
 		return result
@@ -208,10 +212,6 @@ func (a Relver) Compare(b Relver) int {
 	}
 
 	return 0
-}
-
-func (r Relver) IsValid() bool {
-	return r.Version.IsValid() && r.Release.IsValid()
 }
 
 func (a Relver) GreaterOrEqual(b Relver) bool {

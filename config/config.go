@@ -6,17 +6,15 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 
 	"github.com/bashidogames/gdvm/internal/platform"
 	"github.com/bashidogames/gdvm/internal/utils"
 )
 
-const CONFIG_FILENAME = "config.json"
-
 type Config struct {
-	GodotRootDirectory string `json:"godot-root-directory,omitempty"`
-	CacheDirectory     string `json:"cache-directory,omitempty"`
+	BuildTemplatesRootDirectory string `json:"build-templates-root-directory,omitempty"`
+	GodotRootDirectory          string `json:"godot-root-directory,omitempty"`
+	CacheDirectory              string `json:"cache-directory,omitempty"`
 
 	ConfigPath string            `json:"-"`
 	Platform   platform.Platform `json:"-"`
@@ -24,12 +22,21 @@ type Config struct {
 }
 
 func (c *Config) Reset() error {
+	if c.Verbose {
+		utils.Printlnf("Attempting to reset config...")
+	}
+
 	config, err := DefaultConfig()
 	if err != nil {
 		return fmt.Errorf("could not create default config: %w", err)
 	}
 
 	*c = *config
+
+	if c.Verbose {
+		utils.Printlnf("Config reset")
+	}
+
 	return nil
 }
 
@@ -51,6 +58,10 @@ func (c *Config) Save() error {
 	err = os.WriteFile(c.ConfigPath, bytes, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("cannot write config: %w", err)
+	}
+
+	if c.Verbose {
+		utils.Printlnf("Config saved")
 	}
 
 	return nil
@@ -80,98 +91,43 @@ func (c *Config) load() error {
 		return fmt.Errorf("cannot parse config: %w", err)
 	}
 
+	if c.Verbose {
+		utils.Printlnf("Config loaded")
+	}
+
 	return nil
 }
 
-func DefaultGodotRootDirectory() (string, error) {
-	userHomeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("cannot determine user home directory: %w", err)
-	}
-
-	directory := filepath.Join(userHomeDir, "Godot")
-	return directory, nil
-}
-
-func DefaultCacheDirectory() (string, error) {
-	userCacheDir, err := os.UserCacheDir()
-	if err != nil {
-		return "", fmt.Errorf("cannot determine user cache directory: %w", err)
-	}
-
-	directory := filepath.Join(userCacheDir, "bashidogames", "gdvm")
-	return directory, nil
-}
-
-func ConfigPath() (string, error) {
-	root, err := os.UserConfigDir()
-	if err != nil {
-		return "", fmt.Errorf("cannot determine user config directory: %w", err)
-	}
-
-	directory := filepath.Join(root, "bashidogames", "gdvm")
-	path := filepath.Join(directory, CONFIG_FILENAME)
-	return path, nil
-}
-
-func Platform() (platform.Platform, error) {
-	switch runtime.GOOS {
-	case "windows":
-		switch runtime.GOARCH {
-		case "amd64":
-			return platform.WindowsAmd64, nil
-		case "386":
-			return platform.Windows386, nil
-		}
-	case "linux":
-		switch runtime.GOARCH {
-		case "arm64":
-			return platform.LinuxArm64, nil
-		case "amd64":
-			return platform.LinuxAmd64, nil
-		case "arm":
-			return platform.LinuxArm, nil
-		case "386":
-			return platform.Linux386, nil
-		}
-	case "darwin":
-		switch runtime.GOARCH {
-		case "arm64":
-			return platform.DarwinArm64, nil
-		case "amd64":
-			return platform.DarwinAmd64, nil
-		case "386":
-			return platform.Darwin386, nil
-		}
-	}
-
-	return "", fmt.Errorf("invalid platform")
-}
-
 func DefaultConfig() (*Config, error) {
-	defaultGodotRootDirectory, err := DefaultGodotRootDirectory()
+	defaultBuildTemplatesRootDirectory, err := platform.DefaultBuildTemplatesRootDirectory()
+	if err != nil {
+		return nil, fmt.Errorf("cannot get default build templates root directory: %w", err)
+	}
+
+	defaultGodotRootDirectory, err := platform.DefaultGodotRootDirectory()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get default godot root directory: %w", err)
 	}
 
-	defaultCacheDirectory, err := DefaultCacheDirectory()
+	defaultCacheDirectory, err := platform.DefaultCacheDirectory()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get default cache directory: %w", err)
 	}
 
-	configPath, err := ConfigPath()
+	configPath, err := platform.ConfigPath()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get config path: %w", err)
 	}
 
-	platform, err := Platform()
+	platform, err := platform.Get()
 	if err != nil {
 		return nil, fmt.Errorf("could not determine platform: %w", err)
 	}
 
 	return &Config{
-		GodotRootDirectory: defaultGodotRootDirectory,
-		CacheDirectory:     defaultCacheDirectory,
+		BuildTemplatesRootDirectory: defaultBuildTemplatesRootDirectory,
+		GodotRootDirectory:          defaultGodotRootDirectory,
+		CacheDirectory:              defaultCacheDirectory,
 
 		ConfigPath: configPath,
 		Platform:   platform,
