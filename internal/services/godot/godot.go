@@ -15,7 +15,6 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-const DOWNLOAD_URL = "https://github.com/godotengine/godot-builds/releases/download"
 const GODOT_FOLDER = "godot"
 
 type Service struct {
@@ -28,7 +27,7 @@ func (s *Service) Download(semver semver.Semver) error {
 		utils.Printlnf("Attempting to download '%s' godot...", semver)
 	}
 
-	asset, err := s.Environment.FetchAsset(semver)
+	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
 		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil
@@ -105,7 +104,7 @@ func (s *Service) Install(semver semver.Semver) error {
 		utils.Printlnf("Attempting to install '%s' godot...", semver)
 	}
 
-	asset, err := s.Environment.FetchAsset(semver)
+	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
 		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
 		return nil

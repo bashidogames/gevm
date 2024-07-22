@@ -13,6 +13,24 @@ type Environment struct {
 	Github *github.Github
 }
 
+func (e *Environment) FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
+	asset, err := e.Github.FetchBuildTemplatesAsset(semver)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch build templates asset: %w", err)
+	}
+
+	return asset, nil
+}
+
+func (e *Environment) FetchGodotAsset(semver semver.Semver) (*repository.Asset, error) {
+	asset, err := e.Github.FetchGodotAsset(semver)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch godot asset: %w", err)
+	}
+
+	return asset, nil
+}
+
 func (e *Environment) FetchRepository() (*repository.Repository, error) {
 	repo := repository.Repository{
 		Downloads: map[semver.Relver]repository.Download{},
@@ -41,15 +59,6 @@ func (e *Environment) FetchRepository() (*repository.Repository, error) {
 	}
 
 	return &repo, nil
-}
-
-func (e *Environment) FetchAsset(semver semver.Semver) (*repository.Asset, error) {
-	asset, err := e.Github.FetchAsset(semver)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch asset: %w", err)
-	}
-
-	return asset, nil
 }
 
 func New(github *github.Github) (*Environment, error) {

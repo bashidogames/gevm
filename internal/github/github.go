@@ -11,6 +11,7 @@ import (
 	"github.com/bashidogames/gdvm/config"
 	"github.com/bashidogames/gdvm/internal/downloading"
 	"github.com/bashidogames/gdvm/internal/github/mappings"
+	"github.com/bashidogames/gdvm/internal/platform"
 	"github.com/bashidogames/gdvm/internal/repository"
 	"github.com/bashidogames/gdvm/semver"
 )
@@ -35,6 +36,14 @@ type Data struct {
 		DownloadURL string `json:"browser_download_url"`
 		Name        string `json:"name"`
 	} `json:"assets"`
+}
+
+func (g *Github) FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
+	return fetchAsset(platform.ExportTemplates, semver)
+}
+
+func (g *Github) FetchGodotAsset(semver semver.Semver) (*repository.Asset, error) {
+	return fetchAsset(g.Config.Platform, semver)
 }
 
 func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) error {
@@ -112,10 +121,10 @@ func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) e
 	return nil
 }
 
-func (g *Github) FetchAsset(semver semver.Semver) (*repository.Asset, error) {
-	mapping, ok := mappings.Mappings[g.Config.Platform]
+func fetchAsset(platform platform.Platform, semver semver.Semver) (*repository.Asset, error) {
+	mapping, ok := mappings.Mappings[platform]
 	if !ok {
-		return nil, fmt.Errorf("invalid platform mapping: %s", g.Config.Platform)
+		return nil, fmt.Errorf("invalid platform mapping: %s", platform)
 	}
 
 	url := fmt.Sprintf(ASSET_URL, semver.Relver)

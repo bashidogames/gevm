@@ -13,7 +13,7 @@ type Service struct {
 	Config *config.Config
 }
 
-func (s Service) Reset() error {
+func (s *Service) Reset() error {
 	err := s.Config.Reset()
 	if err != nil {
 		return fmt.Errorf("cannot reset config: %w", err)
@@ -28,7 +28,7 @@ func (s Service) Reset() error {
 	return nil
 }
 
-func (s Service) List() error {
+func (s *Service) List() error {
 	err := s.iterateFields(func(field reflect.Value, name string) error {
 		utils.Printlnf("%s = %s", name, field.String())
 		return nil
@@ -40,7 +40,7 @@ func (s Service) List() error {
 	return nil
 }
 
-func (s Service) Set(key string, value string) error {
+func (s *Service) Set(key string, value string) error {
 	err := s.findField(key, func(field reflect.Value, name string) error {
 		utils.Printlnf("%s = %s => %s", name, field.String(), value)
 		field.SetString(value)
@@ -58,7 +58,7 @@ func (s Service) Set(key string, value string) error {
 	return nil
 }
 
-func (s Service) Get(key string) error {
+func (s *Service) Get(key string) error {
 	err := s.findField(key, func(field reflect.Value, name string) error {
 		utils.Printlnf("%s = %s", name, field.String())
 		return nil
@@ -70,12 +70,12 @@ func (s Service) Get(key string) error {
 	return nil
 }
 
-func (s Service) Path() error {
+func (s *Service) Path() error {
 	utils.Printlnf(s.Config.ConfigPath)
 	return nil
 }
 
-func (s Service) iterateFields(callback func(reflect.Value, string) error) error {
+func (s *Service) iterateFields(callback func(reflect.Value, string) error) error {
 	element := reflect.ValueOf(s.Config).Elem()
 	for i := 0; i < element.Type().NumField(); i++ {
 		tag := element.Type().Field(i).Tag.Get("json")
@@ -95,7 +95,7 @@ func (s Service) iterateFields(callback func(reflect.Value, string) error) error
 	return nil
 }
 
-func (s Service) findField(key string, callback func(reflect.Value, string) error) error {
+func (s *Service) findField(key string, callback func(reflect.Value, string) error) error {
 	found := false
 	err := s.iterateFields(func(field reflect.Value, name string) error {
 		if name != key {

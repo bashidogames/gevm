@@ -12,7 +12,7 @@ type Service struct {
 	Config *config.Config
 }
 
-func (s Service) Clear() error {
+func (s *Service) Clear() error {
 	if s.Config.Verbose {
 		utils.Printlnf("Attempting to clear cache directory: %s", s.Config.CacheDirectory)
 	}
