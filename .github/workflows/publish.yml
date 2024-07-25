@@ -34,8 +34,35 @@ jobs:
                 name: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
                 if-no-files-found: error
                 retention-days: 1
-    release:
+    windows:
         needs: build
+        strategy:
+            fail-fast: false
+            matrix:
+                arch: ['amd64', '386']
+                os: ['windows']
+        runs-on: windows-latest
+        name: Packaging ${{ matrix.os }}-${{ matrix.arch }}
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Download Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+            - name: Extract Build
+              run: 7z x gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+            - name: Package Build
+              run: iscc /dMyAppVersion=${{ github.ref_name }} package-${{ matrix.os }}-${{ matrix.arch }}.iss
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                path: gdvm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
+                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
+                if-no-files-found: error
+                retention-days: 1
+    release:
+        needs: windows
         name: Publishing Release
         runs-on: ubuntu-latest
         steps:
