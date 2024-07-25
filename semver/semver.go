@@ -234,7 +234,7 @@ func (a Relver) Equal(b Relver) bool {
 	return a.Compare(b) == 0
 }
 
-func (vr Relver) BuildTemplatesString() string {
+func (vr Relver) ExportTemplatesString() string {
 	return fmt.Sprintf("%s.%s", vr.Version, vr.Release)
 }
 
@@ -313,11 +313,11 @@ func (a Semver) Equal(b Semver) bool {
 	return a.Compare(b) == 0
 }
 
-func (s Semver) BuildTemplatesString() string {
+func (s Semver) ExportTemplatesString() string {
 	if s.Mono {
-		return fmt.Sprintf("%s.mono", s.Relver.BuildTemplatesString())
+		return fmt.Sprintf("%s.mono", s.Relver.ExportTemplatesString())
 	} else {
-		return s.Relver.BuildTemplatesString()
+		return s.Relver.ExportTemplatesString()
 	}
 }
 

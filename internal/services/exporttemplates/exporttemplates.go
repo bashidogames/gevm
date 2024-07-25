@@ -1,4 +1,4 @@
-package buildtemplates
+package exporttemplates
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-const CACHE_FOLDER = "build-templates"
+const CACHE_FOLDER = "export-templates"
 const TEMP_FOLDER = "templates"
 
 type Service struct {
@@ -25,12 +25,12 @@ type Service struct {
 
 func (s *Service) Download(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to download '%s' build templates...", semver.BuildTemplatesString())
+		utils.Printlnf("Attempting to download '%s' export templates...", semver.ExportTemplatesString())
 	}
 
-	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
+	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -45,7 +45,7 @@ func (s *Service) Download(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Build templates '%s' already downloaded", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' already downloaded", semver.ExportTemplatesString())
 		return nil
 	}
 
@@ -56,20 +56,20 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' downloaded", semver.BuildTemplatesString())
+	utils.Printlnf("Export templates '%s' downloaded", semver.ExportTemplatesString())
 	return nil
 }
 
 func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to uninstall '%s' build templates...", semver.BuildTemplatesString())
+		utils.Printlnf("Attempting to uninstall '%s' export templates...", semver.ExportTemplatesString())
 	}
 
 	targetDirectory := s.targetDirectory(semver)
@@ -81,7 +81,7 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			utils.Printlnf("Build templates '%s' not found", semver.BuildTemplatesString())
+			utils.Printlnf("Export templates '%s' not found", semver.ExportTemplatesString())
 		}
 
 		return nil
@@ -96,18 +96,18 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' uninstalled", semver.BuildTemplatesString())
+	utils.Printlnf("Export templates '%s' uninstalled", semver.ExportTemplatesString())
 	return nil
 }
 
 func (s *Service) Install(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to install '%s' build templates...", semver.BuildTemplatesString())
+		utils.Printlnf("Attempting to install '%s' export templates...", semver.ExportTemplatesString())
 	}
 
-	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
+	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -125,11 +125,11 @@ func (s *Service) Install(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Build templates '%s' already installed", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' already installed", semver.ExportTemplatesString())
 		return nil
 	}
 
-	err = os.MkdirAll(s.Config.BuildTemplatesRootDirectory, utils.OS_DIRECTORY)
+	err = os.MkdirAll(s.Config.ExportTemplatesRootDirectory, utils.OS_DIRECTORY)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
 	}
@@ -151,7 +151,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -178,18 +178,18 @@ func (s *Service) Install(semver semver.Semver) error {
 		return fmt.Errorf("move failed: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' installed", semver.BuildTemplatesString())
+	utils.Printlnf("Export templates '%s' installed", semver.ExportTemplatesString())
 	return nil
 }
 
 func (s *Service) List() error {
-	entries, err := os.ReadDir(s.Config.BuildTemplatesRootDirectory)
+	entries, err := os.ReadDir(s.Config.ExportTemplatesRootDirectory)
 	if !errors.Is(err, os.ErrNotExist) && err != nil {
-		return fmt.Errorf("cannot read build templates root directory: %w", err)
+		return fmt.Errorf("cannot read export templates root directory: %w", err)
 	}
 
 	if len(entries) == 0 {
-		utils.Printlnf("No build templates installed")
+		utils.Printlnf("No export templates installed")
 		return nil
 	}
 
@@ -224,7 +224,7 @@ func (s *Service) List() error {
 }
 
 func (s *Service) targetDirectory(semver semver.Semver) string {
-	return filepath.Join(s.Config.BuildTemplatesRootDirectory, semver.BuildTemplatesString())
+	return filepath.Join(s.Config.ExportTemplatesRootDirectory, semver.ExportTemplatesString())
 }
 
 func (s *Service) archivePath(name string) string {
@@ -232,11 +232,11 @@ func (s *Service) archivePath(name string) string {
 }
 
 func (s *Service) tempDirectory() string {
-	return filepath.Join(s.Config.BuildTemplatesRootDirectory, TEMP_FOLDER)
+	return filepath.Join(s.Config.ExportTemplatesRootDirectory, TEMP_FOLDER)
 }
 
 func (s *Service) rootDirectory() string {
-	return s.Config.BuildTemplatesRootDirectory
+	return s.Config.ExportTemplatesRootDirectory
 }
 
 func New(environment *environment.Environment, config *config.Config) *Service {

@@ -39,7 +39,7 @@ type Data struct {
 	} `json:"assets"`
 }
 
-func (g *Github) FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
+func (g *Github) FetchExportTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
 	return g.fetchAsset(platform.ExportTemplates, semver)
 }
 

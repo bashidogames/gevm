@@ -5,8 +5,8 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/bashidogames/gdvm"
-	"github.com/bashidogames/gdvm/cmd/gdvm/buildtemplates"
 	"github.com/bashidogames/gdvm/cmd/gdvm/cache"
+	"github.com/bashidogames/gdvm/cmd/gdvm/exporttemplates"
 	"github.com/bashidogames/gdvm/cmd/gdvm/godot"
 	"github.com/bashidogames/gdvm/cmd/gdvm/settings"
 	"github.com/bashidogames/gdvm/cmd/gdvm/shortcuts"
@@ -16,13 +16,13 @@ import (
 )
 
 var CLI struct {
-	BuildTemplates buildtemplates.BuildTemplates `cmd:"" help:"Run commands related to the build templates"`
-	Godot          godot.Godot                   `cmd:"" help:"Run commands related to the godot engine" default:"withargs"`
-	Shortcuts      shortcuts.Shortcuts           `cmd:"" help:"Run commands related to shortcuts for godot"`
-	Versions       versions.Versions             `cmd:"" help:"View available versions for download"`
-	Settings       settings.Settings             `cmd:"" help:"Reset, list, set and get config values"`
-	Cache          cache.Cache                   `cmd:"" help:"Run commands on the cache"`
-	Version        version.Version               `cmd:"" help:"Print current version"`
+	Versions        versions.Versions               `cmd:"" help:"View available versions for download"`
+	ExportTemplates exporttemplates.ExportTemplates `cmd:"" help:"Run commands related to export templates"`
+	Godot           godot.Godot                     `cmd:"" help:"Run commands related to godot engines" default:"withargs"`
+	Shortcuts       shortcuts.Shortcuts             `cmd:"" help:"Remove and add godot shortcuts"`
+	Settings        settings.Settings               `cmd:"" help:"View and adjust config settings"`
+	Cache           cache.Cache                     `cmd:"" help:"Run commands on the cache"`
+	Version         version.Version                 `cmd:"" help:"Print current version"`
 
 	ConfigPath string `help:"Override which config path to use"`
 	Verbose    bool   `help:"Use verbose debug logging"`

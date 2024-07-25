@@ -12,7 +12,7 @@ import (
 )
 
 type Config struct {
-	BuildTemplatesRootDirectory  string `json:"build-templates-root-directory,omitempty"`
+	ExportTemplatesRootDirectory string `json:"export-templates-root-directory,omitempty"`
 	GodotRootDirectory           string `json:"godot-root-directory,omitempty"`
 	ApplicationShortcutDirectory string `json:"application-shortcut-directory,omitempty"`
 	DesktopShortcutDirectory     string `json:"desktop-shortcut-directory,omitempty"`
@@ -107,9 +107,9 @@ func (c *Config) load() error {
 }
 
 func DefaultConfig() (*Config, error) {
-	defaultBuildTemplatesRootDirectory, err := platform.DefaultBuildTemplatesRootDirectory()
+	defaultExportTemplatesRootDirectory, err := platform.DefaultExportTemplatesRootDirectory()
 	if err != nil {
-		return nil, fmt.Errorf("cannot get default build templates root directory: %w", err)
+		return nil, fmt.Errorf("cannot get default export templates root directory: %w", err)
 	}
 
 	defaultGodotRootDirectory, err := platform.DefaultGodotRootDirectory()
@@ -143,7 +143,7 @@ func DefaultConfig() (*Config, error) {
 	}
 
 	return &Config{
-		BuildTemplatesRootDirectory:  defaultBuildTemplatesRootDirectory,
+		ExportTemplatesRootDirectory: defaultExportTemplatesRootDirectory,
 		GodotRootDirectory:           defaultGodotRootDirectory,
 		ApplicationShortcutDirectory: defaultApplicationShortcutDirectory,
 		DesktopShortcutDirectory:     defaultDesktopShortcutDirectory,
