@@ -63,8 +63,7 @@ func (s *Service) Add(semver semver.Semver) error {
 	shortcutName := s.Fetcher.ShortcutName(semver)
 
 	if s.Config.Verbose {
-		utils.Printlnf("Adding application shortcut: %s", shortcutPath)
-		utils.Printlnf("Target path: %s", targetPath)
+		utils.Printlnf("Adding '%s' application shortcut: %s => %s", shortcutName, shortcutPath, targetPath)
 	}
 
 	exists, err := utils.DoesExist(shortcutPath)
