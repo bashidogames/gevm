@@ -12,9 +12,11 @@ import (
 )
 
 type Config struct {
-	BuildTemplatesRootDirectory string `json:"build-templates-root-directory,omitempty"`
-	GodotRootDirectory          string `json:"godot-root-directory,omitempty"`
-	CacheDirectory              string `json:"cache-directory,omitempty"`
+	BuildTemplatesRootDirectory  string `json:"build-templates-root-directory,omitempty"`
+	GodotRootDirectory           string `json:"godot-root-directory,omitempty"`
+	ApplicationShortcutDirectory string `json:"application-shortcut-directory,omitempty"`
+	DesktopShortcutDirectory     string `json:"desktop-shortcut-directory,omitempty"`
+	CacheDirectory               string `json:"cache-directory,omitempty"`
 
 	ConfigPath string            `json:"-"`
 	Platform   platform.Platform `json:"-"`
@@ -109,6 +111,16 @@ func DefaultConfig() (*Config, error) {
 		return nil, fmt.Errorf("cannot get default godot root directory: %w", err)
 	}
 
+	defaultApplicationShortcutDirectory, err := platform.DefaultApplicationShortcutDirectory()
+	if err != nil {
+		return nil, fmt.Errorf("cannot get default application shortcut directory: %w", err)
+	}
+
+	defaultDesktopShortcutDirectory, err := platform.DefaultDesktopShortcutDirectory()
+	if err != nil {
+		return nil, fmt.Errorf("cannot get default desktop shortcut directory: %w", err)
+	}
+
 	defaultCacheDirectory, err := platform.DefaultCacheDirectory()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get default cache directory: %w", err)
@@ -125,9 +137,11 @@ func DefaultConfig() (*Config, error) {
 	}
 
 	return &Config{
-		BuildTemplatesRootDirectory: defaultBuildTemplatesRootDirectory,
-		GodotRootDirectory:          defaultGodotRootDirectory,
-		CacheDirectory:              defaultCacheDirectory,
+		BuildTemplatesRootDirectory:  defaultBuildTemplatesRootDirectory,
+		GodotRootDirectory:           defaultGodotRootDirectory,
+		ApplicationShortcutDirectory: defaultApplicationShortcutDirectory,
+		DesktopShortcutDirectory:     defaultDesktopShortcutDirectory,
+		CacheDirectory:               defaultCacheDirectory,
 
 		ConfigPath: configPath,
 		Platform:   platform,

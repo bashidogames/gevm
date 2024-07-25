@@ -9,6 +9,7 @@ import (
 	"github.com/bashidogames/gdvm/cmd/gdvm/cache"
 	"github.com/bashidogames/gdvm/cmd/gdvm/godot"
 	"github.com/bashidogames/gdvm/cmd/gdvm/settings"
+	"github.com/bashidogames/gdvm/cmd/gdvm/shortcuts"
 	"github.com/bashidogames/gdvm/cmd/gdvm/version"
 	"github.com/bashidogames/gdvm/cmd/gdvm/versions"
 	"github.com/bashidogames/gdvm/config"
@@ -17,6 +18,7 @@ import (
 var CLI struct {
 	BuildTemplates buildtemplates.BuildTemplates `cmd:"" help:"Run commands related to the build templates"`
 	Godot          godot.Godot                   `cmd:"" help:"Run commands related to the godot engine" default:"withargs"`
+	Shortcuts      shortcuts.Shortcuts           `cmd:"" help:"Run commands related to shortcuts for godot"`
 	Versions       versions.Versions             `cmd:"" help:"View available versions for download"`
 	Settings       settings.Settings             `cmd:"" help:"Reset, list, set and get config values"`
 	Cache          cache.Cache                   `cmd:"" help:"Run commands on the cache"`

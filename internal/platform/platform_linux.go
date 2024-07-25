@@ -28,6 +28,26 @@ func DefaultGodotRootDirectory() (string, error) {
 	return directory, nil
 }
 
+func DefaultApplicationShortcutDirectory() (string, error) {
+	root, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine user home directory: %w", err)
+	}
+
+	directory := filepath.Join(root, ".local", "share", "applications")
+	return directory, nil
+}
+
+func DefaultDesktopShortcutDirectory() (string, error) {
+	root, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine user home directory: %w", err)
+	}
+
+	directory := filepath.Join(root, "Desktop")
+	return directory, nil
+}
+
 func DefaultCacheDirectory() (string, error) {
 	userCacheDir, err := os.UserCacheDir()
 	if err != nil {
