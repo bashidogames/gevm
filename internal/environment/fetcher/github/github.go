@@ -11,7 +11,8 @@ import (
 
 	"github.com/bashidogames/gdvm/config"
 	"github.com/bashidogames/gdvm/internal/downloading"
-	"github.com/bashidogames/gdvm/internal/github/mappings"
+	"github.com/bashidogames/gdvm/internal/environment/fetcher"
+	"github.com/bashidogames/gdvm/internal/environment/fetcher/github/mappings"
 	"github.com/bashidogames/gdvm/internal/platform"
 	"github.com/bashidogames/gdvm/internal/repository"
 	"github.com/bashidogames/gdvm/semver"
@@ -45,7 +46,7 @@ func (g *Github) FetchGodotAsset(semver semver.Semver) (*repository.Asset, error
 	return fetchAsset(g.Config.Platform, semver)
 }
 
-func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) error {
+func (g *Github) FetchRepository(callback func(entry *fetcher.Entry) error) error {
 	url := REPOSITORY_URL
 	var datas []Data
 
@@ -101,7 +102,7 @@ func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) e
 					continue
 				}
 
-				err := callback(&repository.Entry{
+				err := callback(&fetcher.Entry{
 					Platform: platform,
 					Relver:   relver,
 					Asset: repository.Asset{

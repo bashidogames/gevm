@@ -43,10 +43,3 @@ type Asset struct {
 func (a Asset) IsValid() bool {
 	return len(a.DownloadURL) > 0 && len(a.Name) > 0
 }
-
-type Entry struct {
-	Platform platform.Platform
-	Relver   semver.Relver
-	Asset    Asset
-	Mono     bool
-}

@@ -3,18 +3,18 @@ package environment
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm/internal/github"
+	"github.com/bashidogames/gdvm/internal/environment/fetcher"
 	"github.com/bashidogames/gdvm/internal/platform"
 	"github.com/bashidogames/gdvm/internal/repository"
 	"github.com/bashidogames/gdvm/semver"
 )
 
 type Environment struct {
-	Github *github.Github
+	Fetcher fetcher.Fetcher
 }
 
 func (e *Environment) FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
-	asset, err := e.Github.FetchBuildTemplatesAsset(semver)
+	asset, err := e.Fetcher.FetchBuildTemplatesAsset(semver)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch build templates asset: %w", err)
 	}
@@ -23,7 +23,7 @@ func (e *Environment) FetchBuildTemplatesAsset(semver semver.Semver) (*repositor
 }
 
 func (e *Environment) FetchGodotAsset(semver semver.Semver) (*repository.Asset, error) {
-	asset, err := e.Github.FetchGodotAsset(semver)
+	asset, err := e.Fetcher.FetchGodotAsset(semver)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch godot asset: %w", err)
 	}
@@ -32,12 +32,12 @@ func (e *Environment) FetchGodotAsset(semver semver.Semver) (*repository.Asset, 
 }
 
 func (e *Environment) FetchRepository() (*repository.Repository, error) {
-	repo := repository.Repository{
+	result := repository.Repository{
 		Downloads: map[semver.Relver]repository.Download{},
 	}
 
-	err := e.Github.FetchRepository(func(entry *repository.Entry) error {
-		download, ok := repo.Downloads[entry.Relver]
+	err := e.Fetcher.FetchRepository(func(entry *fetcher.Entry) error {
+		download, ok := result.Downloads[entry.Relver]
 		if !ok {
 			download = repository.Download{
 				MonoAssets: map[platform.Platform]repository.Asset{},
@@ -51,18 +51,18 @@ func (e *Environment) FetchRepository() (*repository.Repository, error) {
 			download.Assets[entry.Platform] = entry.Asset
 		}
 
-		repo.Downloads[entry.Relver] = download
+		result.Downloads[entry.Relver] = download
 		return nil
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch repository: %w", err)
 	}
 
-	return &repo, nil
+	return &result, nil
 }
 
-func New(github *github.Github) (*Environment, error) {
+func New(fetcher fetcher.Fetcher) (*Environment, error) {
 	return &Environment{
-		Github: github,
+		Fetcher: fetcher,
 	}, nil
 }

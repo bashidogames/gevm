@@ -5,7 +5,7 @@ import (
 
 	"github.com/bashidogames/gdvm/config"
 	"github.com/bashidogames/gdvm/internal/environment"
-	"github.com/bashidogames/gdvm/internal/github"
+	"github.com/bashidogames/gdvm/internal/environment/fetcher/github"
 	"github.com/bashidogames/gdvm/internal/services/buildtemplates"
 	"github.com/bashidogames/gdvm/internal/services/cache"
 	"github.com/bashidogames/gdvm/internal/services/godot"
