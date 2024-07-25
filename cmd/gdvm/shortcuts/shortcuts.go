@@ -6,6 +6,6 @@ import (
 )
 
 type Shortcuts struct {
-	Application application.Application `cmd:"" help:"Run commands for application shortcuts"`
-	Desktop     desktop.Desktop         `cmd:"" help:"Run commands for desktop shortcuts"`
+	Application application.Application `cmd:"" help:"Remove and add application shortcuts"`
+	Desktop     desktop.Desktop         `cmd:"" help:"Remove and add desktop shortcuts"`
 }

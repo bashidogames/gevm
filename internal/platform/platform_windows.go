@@ -8,7 +8,7 @@ import (
 
 const CONFIG_FILENAME = "config.json"
 
-func DefaultBuildTemplatesRootDirectory() (string, error) {
+func DefaultExportTemplatesRootDirectory() (string, error) {
 	root, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine user config directory: %w", err)

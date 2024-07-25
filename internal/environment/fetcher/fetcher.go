@@ -7,7 +7,7 @@ import (
 )
 
 type Fetcher interface {
-	FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error)
+	FetchExportTemplatesAsset(semver semver.Semver) (*repository.Asset, error)
 	FetchGodotAsset(semver semver.Semver) (*repository.Asset, error)
 	FetchRepository(func(entry *Entry) error) error
 }

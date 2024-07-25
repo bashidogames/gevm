@@ -13,10 +13,10 @@ type Environment struct {
 	Fetcher fetcher.Fetcher
 }
 
-func (e *Environment) FetchBuildTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
-	asset, err := e.Fetcher.FetchBuildTemplatesAsset(semver)
+func (e *Environment) FetchExportTemplatesAsset(semver semver.Semver) (*repository.Asset, error) {
+	asset, err := e.Fetcher.FetchExportTemplatesAsset(semver)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch build templates asset: %w", err)
+		return nil, fmt.Errorf("failed to fetch export templates asset: %w", err)
 	}
 
 	return asset, nil
