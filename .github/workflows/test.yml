@@ -1,0 +1,35 @@
+name: Test Project
+on:
+    workflow_dispatch: {}
+    pull_request:
+        branches:
+            - 'main'
+    push:
+        branches:
+            - 'main'
+jobs:
+    test:
+        strategy:
+            fail-fast: false
+            matrix:
+                os: ['windows', 'linux']
+                arch: ['amd64', '386']
+        runs-on: ubuntu-latest
+        name: Testing ${{ matrix.os }}-${{ matrix.arch }}
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                go-version-file: go.mod
+            - name: Build Project
+              run: go build ./cmd/gdvm
+              env:
+                GOARCH: ${{ matrix.arch }}
+                GOOS: ${{ matrix.os }}
+            - name: Test Project
+              run: go test ./...
+              env:
+                GOARCH: ${{ matrix.arch }}
+                GOOS: ${{ matrix.os }}
