@@ -234,7 +234,11 @@ func (a Relver) Equal(b Relver) bool {
 	return a.Compare(b) == 0
 }
 
-func (vr Relver) String() string {
+func (vr Relver) BuildTemplatesString() string {
+	return fmt.Sprintf("%s.%s", vr.Version, vr.Release)
+}
+
+func (vr Relver) GodotString() string {
 	return fmt.Sprintf("%s-%s", vr.Version, vr.Release)
 }
 
@@ -309,11 +313,19 @@ func (a Semver) Equal(b Semver) bool {
 	return a.Compare(b) == 0
 }
 
-func (s Semver) String() string {
+func (s Semver) BuildTemplatesString() string {
 	if s.Mono {
-		return fmt.Sprintf("%s-mono", s.Relver)
+		return fmt.Sprintf("%s.mono", s.Relver.BuildTemplatesString())
 	} else {
-		return s.Relver.String()
+		return s.Relver.BuildTemplatesString()
+	}
+}
+
+func (s Semver) GodotString() string {
+	if s.Mono {
+		return fmt.Sprintf("%s-mono", s.Relver.GodotString())
+	} else {
+		return s.Relver.GodotString()
 	}
 }
 

@@ -18,7 +18,7 @@ type Service struct {
 
 func (s *Service) Remove(semver semver.Semver, logMissing bool) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to remove '%s' desktop shortcut...", semver)
+		utils.Printlnf("Attempting to remove '%s' desktop shortcut...", semver.GodotString())
 	}
 
 	shortcutPath := s.Fetcher.DesktopShortcutPath(semver)
@@ -34,7 +34,7 @@ func (s *Service) Remove(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			utils.Printlnf("Desktop shortcut '%s' not found", semver)
+			utils.Printlnf("Desktop shortcut '%s' not found", semver.GodotString())
 		}
 
 		return nil
@@ -45,13 +45,13 @@ func (s *Service) Remove(semver semver.Semver, logMissing bool) error {
 		return fmt.Errorf("cannot remove shortcut: %w", err)
 	}
 
-	utils.Printlnf("Desktop '%s' shortcut removed", semver)
+	utils.Printlnf("Desktop '%s' shortcut removed", semver.GodotString())
 	return nil
 }
 
 func (s *Service) Add(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to add '%s' desktop shortcut...", semver)
+		utils.Printlnf("Attempting to add '%s' desktop shortcut...", semver.GodotString())
 	}
 
 	targetPath, err := s.Fetcher.TargetPath(semver)
@@ -72,7 +72,7 @@ func (s *Service) Add(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Desktop shortcut '%s' already added", semver)
+		utils.Printlnf("Desktop shortcut '%s' already added", semver.GodotString())
 		return nil
 	}
 
@@ -81,7 +81,7 @@ func (s *Service) Add(semver semver.Semver) error {
 		return fmt.Errorf("cannot create shortcut: %w", err)
 	}
 
-	utils.Printlnf("Desktop '%s' shortcut added", semver)
+	utils.Printlnf("Desktop '%s' shortcut added", semver.GodotString())
 	return nil
 }
 

@@ -29,15 +29,15 @@ func (f *Fetcher) DesktopShortcutPath(semver semver.Semver) string {
 }
 
 func (f *Fetcher) TargetPath(semver semver.Semver) (string, error) {
-	return f.locateExecutable(filepath.Join(f.Config.GodotRootDirectory, semver.String()))
+	return f.locateExecutable(filepath.Join(f.Config.GodotRootDirectory, semver.GodotString()))
 }
 
 func (f *Fetcher) ShortcutName(semver semver.Semver) string {
-	return fmt.Sprintf(SHORTCUT_NAME, semver)
+	return fmt.Sprintf(SHORTCUT_NAME, semver.GodotString())
 }
 
 func (f *Fetcher) shortcutFilename(semver semver.Semver) string {
-	return fmt.Sprintf(SHORTCUT_FILENAME, semver)
+	return fmt.Sprintf(SHORTCUT_FILENAME, semver.GodotString())
 }
 
 func (f *Fetcher) locateExecutable(root string) (string, error) {

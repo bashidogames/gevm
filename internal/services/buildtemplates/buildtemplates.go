@@ -25,12 +25,12 @@ type Service struct {
 
 func (s *Service) Download(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to download '%s' build templates...", semver)
+		utils.Printlnf("Attempting to download '%s' build templates...", semver.BuildTemplatesString())
 	}
 
 	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -45,7 +45,7 @@ func (s *Service) Download(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Build templates '%s' already downloaded", semver)
+		utils.Printlnf("Build templates '%s' already downloaded", semver.BuildTemplatesString())
 		return nil
 	}
 
@@ -56,20 +56,20 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' downloaded", semver)
+	utils.Printlnf("Build templates '%s' downloaded", semver.BuildTemplatesString())
 	return nil
 }
 
 func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to uninstall '%s' build templates...", semver)
+		utils.Printlnf("Attempting to uninstall '%s' build templates...", semver.BuildTemplatesString())
 	}
 
 	targetDirectory := s.targetDirectory(semver)
@@ -81,7 +81,7 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			utils.Printlnf("Build templates '%s' not found", semver)
+			utils.Printlnf("Build templates '%s' not found", semver.BuildTemplatesString())
 		}
 
 		return nil
@@ -96,18 +96,18 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' uninstalled", semver)
+	utils.Printlnf("Build templates '%s' uninstalled", semver.BuildTemplatesString())
 	return nil
 }
 
 func (s *Service) Install(semver semver.Semver) error {
 	if s.Config.Verbose {
-		utils.Printlnf("Attempting to install '%s' build templates...", semver)
+		utils.Printlnf("Attempting to install '%s' build templates...", semver.BuildTemplatesString())
 	}
 
 	asset, err := s.Environment.FetchBuildTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -125,7 +125,7 @@ func (s *Service) Install(semver semver.Semver) error {
 	}
 
 	if exists {
-		utils.Printlnf("Build templates '%s' already installed", semver)
+		utils.Printlnf("Build templates '%s' already installed", semver.BuildTemplatesString())
 		return nil
 	}
 
@@ -151,7 +151,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver)
+		utils.Printlnf("Build templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.BuildTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -178,7 +178,7 @@ func (s *Service) Install(semver semver.Semver) error {
 		return fmt.Errorf("move failed: %w", err)
 	}
 
-	utils.Printlnf("Build templates '%s' installed", semver)
+	utils.Printlnf("Build templates '%s' installed", semver.BuildTemplatesString())
 	return nil
 }
 
@@ -224,7 +224,7 @@ func (s *Service) List() error {
 }
 
 func (s *Service) targetDirectory(semver semver.Semver) string {
-	return filepath.Join(s.Config.BuildTemplatesRootDirectory, semver.String())
+	return filepath.Join(s.Config.BuildTemplatesRootDirectory, semver.BuildTemplatesString())
 }
 
 func (s *Service) archivePath(name string) string {
