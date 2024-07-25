@@ -1,0 +1,53 @@
+name: Publish Project
+on:
+    workflow_dispatch: {}
+    push:
+        tags:
+            - '**'
+jobs:
+    build:
+        strategy:
+            fail-fast: false
+            matrix:
+                os: ['windows', 'linux']
+                arch: ['amd64', '386']
+        runs-on: ubuntu-latest
+        name: Building ${{ matrix.os }}-${{ matrix.arch }}
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                go-version-file: go.mod
+            - name: Build Project
+              run: go build -o ./build/ -ldflags "-X github.com/bashidogames/gdvm/cmd/gdvm/version.version=${{ github.ref_name }}" ./cmd/gdvm
+              env:
+                GOARCH: ${{ matrix.arch }}
+                GOOS: ${{ matrix.os }}
+            - name: Archive Build
+              run: cd build && zip ../gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip * && cd ..
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                path: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+                if-no-files-found: error
+                retention-days: 1
+    release:
+        needs: build
+        name: Publishing Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Download Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                merge-multiple: true
+                pattern: gdvm-*
+                path: builds
+            - name: Create Release
+              run: gh release create ${{ github.ref_name }} --generate-notes --verify-tag builds/*
+              env:
+                GH_TOKEN: ${{ github.token }}
