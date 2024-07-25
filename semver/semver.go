@@ -9,7 +9,7 @@ import (
 	"github.com/bashidogames/gdvm/internal/utils"
 )
 
-const VERSION_REGEX_PATTERN = "([1-9][0-9]*|0)\\.([1-9][0-9]*|0)(\\.([1-9][0-9]*|0))?(\\.([1-9][0-9]*|0))?"
+const VERSION_REGEX_PATTERN = "([1-9][0-9]*|0)[.]([1-9][0-9]*|0)([.]([1-9][0-9]*|0))?([.]([1-9][0-9]*|0))?"
 const RELEASE_REGEX_PATTERN = "((dev|alpha|beta|rc)([1-9][0-9]*|0)|stable)([-_.](unofficial))?"
 const RELVER_REGEX_PATTERN = "(" + VERSION_REGEX_PATTERN + ")[-_.](" + RELEASE_REGEX_PATTERN + ")"
 const SEMVER_REGEX_PATTERN = RELVER_REGEX_PATTERN + "([-_.](mono))?"
@@ -38,7 +38,7 @@ type Version struct {
 }
 
 func (v Version) IsValid() bool {
-	return len(v.Original) != 0
+	return len(v.Original) > 0
 }
 
 func (a Version) Compare(b Version) int {
@@ -128,7 +128,7 @@ type Release struct {
 }
 
 func (r Release) IsValid() bool {
-	return len(r.Original) != 0
+	return len(r.Original) > 0
 }
 
 func (a Release) Compare(b Release) int {

@@ -3,6 +3,8 @@ package shortcut
 import (
 	"fmt"
 	"os"
+
+	"github.com/bashidogames/gdvm/internal/utils"
 )
 
 const CONTENTS = `[Desktop Entry]
@@ -17,7 +19,7 @@ MimeType=text/plain;inode/directory;application/x-godot-project;
 Keywords=godot;`
 
 func Create(shortcutPath string, targetPath string, shortcutName string) error {
-	file, err := os.OpenFile(shortcutPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.ModePerm)
+	file, err := os.OpenFile(shortcutPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, utils.OS_FILE)
 	if err != nil {
 		return fmt.Errorf("could not create shortcut file: %w", err)
 	}

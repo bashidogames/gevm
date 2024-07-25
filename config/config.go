@@ -47,7 +47,7 @@ func (c *Config) Save() error {
 		utils.Printlnf("Attempting to save config: %s", c.ConfigPath)
 	}
 
-	err := os.MkdirAll(filepath.Dir(c.ConfigPath), os.ModePerm)
+	err := os.MkdirAll(filepath.Dir(c.ConfigPath), utils.OS_DIRECTORY)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
 	}
@@ -57,7 +57,13 @@ func (c *Config) Save() error {
 		return fmt.Errorf("cannot parse config: %w", err)
 	}
 
-	err = os.WriteFile(c.ConfigPath, bytes, os.ModePerm)
+	file, err := os.OpenFile(c.ConfigPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, utils.OS_FILE)
+	if err != nil {
+		return fmt.Errorf("cannot create config: %w", err)
+	}
+	defer file.Close()
+
+	_, err = file.Write(bytes)
 	if err != nil {
 		return fmt.Errorf("cannot write config: %w", err)
 	}

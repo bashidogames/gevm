@@ -126,7 +126,7 @@ func (s *Service) Install(semver semver.Semver) error {
 		return nil
 	}
 
-	err = os.MkdirAll(s.Config.GodotRootDirectory, os.ModePerm)
+	err = os.MkdirAll(s.Config.GodotRootDirectory, utils.OS_DIRECTORY)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
 	}

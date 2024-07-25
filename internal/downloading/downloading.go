@@ -66,12 +66,12 @@ func Download(url string, path string) error {
 		return fmt.Errorf("download status failure: %s", resp.Status)
 	}
 
-	err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
+	err = os.MkdirAll(filepath.Dir(path), utils.OS_DIRECTORY)
 	if err != nil {
 		return fmt.Errorf("could not make directory: %w", err)
 	}
 
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.ModePerm)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, utils.OS_FILE)
 	if err != nil {
 		return fmt.Errorf("could not create destination file: %w", err)
 	}

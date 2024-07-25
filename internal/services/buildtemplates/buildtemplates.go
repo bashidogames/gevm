@@ -129,7 +129,7 @@ func (s *Service) Install(semver semver.Semver) error {
 		return nil
 	}
 
-	err = os.MkdirAll(s.Config.BuildTemplatesRootDirectory, os.ModePerm)
+	err = os.MkdirAll(s.Config.BuildTemplatesRootDirectory, utils.OS_DIRECTORY)
 	if err != nil {
 		return fmt.Errorf("cannot make directory: %w", err)
 	}

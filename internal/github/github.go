@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
 	"slices"
@@ -23,8 +24,6 @@ const NEXT_REGEX_PATTERN = "<([^>]*)>[^<]*(next)"
 
 var AssetRegex = regexp.MustCompile(ASSET_REGEX_PATTERN)
 var NextRegex = regexp.MustCompile(NEXT_REGEX_PATTERN)
-
-var ErrFetchDone = errors.New("fetch done")
 
 type Github struct {
 	Config *config.Config
@@ -63,13 +62,13 @@ func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) e
 
 			parts := NextRegex.FindStringSubmatch(link)
 			if len(parts) == 0 {
-				return ErrFetchDone
+				return io.EOF
 			}
 
 			url = parts[1]
 			return nil
 		})
-		if errors.Is(err, ErrFetchDone) {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		if err != nil {
@@ -89,7 +88,7 @@ func (g *Github) FetchRepository(callback func(entry *repository.Entry) error) e
 				continue
 			}
 
-			mono := len(parts[1]) != 0
+			mono := len(parts[1]) > 0
 			system := parts[2]
 			arch := parts[4]
 
@@ -150,7 +149,7 @@ func fetchAsset(platform platform.Platform, semver semver.Semver) (*repository.A
 			continue
 		}
 
-		mono := len(parts[1]) != 0
+		mono := len(parts[1]) > 0
 		if semver.Mono != mono {
 			continue
 		}

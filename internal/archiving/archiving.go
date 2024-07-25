@@ -31,7 +31,7 @@ func unzip(reader *zip.ReadCloser, to string) error {
 	for _, file := range reader.File {
 		path := filepath.Join(to, file.Name)
 		if file.FileInfo().IsDir() {
-			err := os.MkdirAll(path, os.ModePerm)
+			err := os.MkdirAll(path, utils.OS_DIRECTORY)
 			if err != nil {
 				return fmt.Errorf("could not make directory: %w", err)
 			}
@@ -39,12 +39,12 @@ func unzip(reader *zip.ReadCloser, to string) error {
 			continue
 		}
 
-		err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+		err := os.MkdirAll(filepath.Dir(path), utils.OS_DIRECTORY)
 		if err != nil {
 			return fmt.Errorf("could not make directory: %w", err)
 		}
 
-		dst, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.ModePerm)
+		dst, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, file.Mode())
 		if err != nil {
 			return fmt.Errorf("could not create destination file: %w", err)
 		}
