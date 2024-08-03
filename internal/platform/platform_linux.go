@@ -9,12 +9,12 @@ import (
 const CONFIG_FILENAME = "config.json"
 
 func DefaultExportTemplatesRootDirectory() (string, error) {
-	root, err := os.UserHomeDir()
+	userHomeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine user home directory: %w", err)
 	}
 
-	directory := filepath.Join(root, ".local", "share", "godot", "export_templates")
+	directory := filepath.Join(userHomeDir, ".local", "share", "godot", "export_templates")
 	return directory, nil
 }
 
@@ -29,22 +29,22 @@ func DefaultGodotRootDirectory() (string, error) {
 }
 
 func DefaultApplicationShortcutDirectory() (string, error) {
-	root, err := os.UserHomeDir()
+	userHomeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine user home directory: %w", err)
 	}
 
-	directory := filepath.Join(root, ".local", "share", "applications")
+	directory := filepath.Join(userHomeDir, ".local", "share", "applications")
 	return directory, nil
 }
 
 func DefaultDesktopShortcutDirectory() (string, error) {
-	root, err := os.UserHomeDir()
+	userHomeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine user home directory: %w", err)
 	}
 
-	directory := filepath.Join(root, "Desktop")
+	directory := filepath.Join(userHomeDir, "Desktop")
 	return directory, nil
 }
 
@@ -69,12 +69,12 @@ func DefaultBinDirectory() (string, error) {
 }
 
 func ConfigPath() (string, error) {
-	root, err := os.UserConfigDir()
+	userConfigDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine user config directory: %w", err)
 	}
 
-	directory := filepath.Join(root, "bashidogames", "gdvm")
+	directory := filepath.Join(userConfigDir, "bashidogames", "gdvm")
 	path := filepath.Join(directory, CONFIG_FILENAME)
 	return path, nil
 }
