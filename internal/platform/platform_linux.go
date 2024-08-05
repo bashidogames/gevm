@@ -58,6 +58,16 @@ func DefaultCacheDirectory() (string, error) {
 	return directory, nil
 }
 
+func DefaultBinDirectory() (string, error) {
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine user home directory: %w", err)
+	}
+
+	directory := filepath.Join(userHomeDir, ".local", "bin")
+	return directory, nil
+}
+
 func ConfigPath() (string, error) {
 	root, err := os.UserConfigDir()
 	if err != nil {

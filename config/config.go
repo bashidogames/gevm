@@ -17,6 +17,7 @@ type Config struct {
 	ApplicationShortcutDirectory string `json:"application-shortcut-directory,omitempty"`
 	DesktopShortcutDirectory     string `json:"desktop-shortcut-directory,omitempty"`
 	CacheDirectory               string `json:"cache-directory,omitempty"`
+	BinDirectory                 string `json:"bin-directory,omitempty"`
 
 	ConfigPath string            `json:"-"`
 	Platform   platform.Platform `json:"-"`
@@ -132,6 +133,11 @@ func DefaultConfig() (*Config, error) {
 		return nil, fmt.Errorf("cannot get default cache directory: %w", err)
 	}
 
+	defaultBinDirectory, err := platform.DefaultBinDirectory()
+	if err != nil {
+		return nil, fmt.Errorf("cannot get default bin directory: %w", err)
+	}
+
 	configPath, err := platform.ConfigPath()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get config path: %w", err)
@@ -148,6 +154,7 @@ func DefaultConfig() (*Config, error) {
 		ApplicationShortcutDirectory: defaultApplicationShortcutDirectory,
 		DesktopShortcutDirectory:     defaultDesktopShortcutDirectory,
 		CacheDirectory:               defaultCacheDirectory,
+		BinDirectory:                 defaultBinDirectory,
 
 		ConfigPath: configPath,
 		Platform:   platform,
