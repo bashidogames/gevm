@@ -3,8 +3,40 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
+	"path/filepath"
+	"regexp"
 )
+
+func LocateExecutable(regex *regexp.Regexp, root string, isDir bool) (string, error) {
+	var result string
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("could not walk path: %s", path)
+		}
+
+		if d.IsDir() != isDir {
+			return nil
+		}
+
+		if !regex.MatchString(filepath.Base(path)) {
+			return nil
+		}
+
+		result = path
+		return filepath.SkipAll
+	})
+	if err != nil {
+		return "", fmt.Errorf("could not walk directory: %w", err)
+	}
+
+	if len(result) == 0 {
+		return "", fmt.Errorf("executable not found")
+	}
+
+	return result, nil
+}
 
 func DoesExist(path string) (bool, error) {
 	_, err := os.Stat(path)

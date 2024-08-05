@@ -2,11 +2,11 @@ package fetcher
 
 import (
 	"fmt"
-	"io/fs"
 	"path/filepath"
 	"regexp"
 
 	"github.com/bashidogames/gdvm/config"
+	"github.com/bashidogames/gdvm/internal/utils"
 	"github.com/bashidogames/gdvm/semver"
 )
 
@@ -41,32 +41,7 @@ func (f *Fetcher) shortcutFilename(semver semver.Semver) string {
 }
 
 func (f *Fetcher) locateExecutable(root string) (string, error) {
-	var result string
-	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return fmt.Errorf("could not walk path: %s", path)
-		}
-
-		if d.IsDir() {
-			return nil
-		}
-
-		if !ExecutableRegex.MatchString(filepath.Base(path)) {
-			return nil
-		}
-
-		result = path
-		return filepath.SkipAll
-	})
-	if err != nil {
-		return "", fmt.Errorf("could not walk directory: %w", err)
-	}
-
-	if len(result) == 0 {
-		return "", fmt.Errorf("executable not found")
-	}
-
-	return result, nil
+	return utils.LocateExecutable(ExecutableRegex, root, false)
 }
 
 func New(config *config.Config) *Fetcher {
