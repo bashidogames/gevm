@@ -10,6 +10,7 @@ import (
 	"github.com/bashidogames/gdvm/internal/archiving"
 	"github.com/bashidogames/gdvm/internal/downloading"
 	"github.com/bashidogames/gdvm/internal/environment"
+	"github.com/bashidogames/gdvm/internal/services/godot/fetcher"
 	"github.com/bashidogames/gdvm/internal/utils"
 	"github.com/bashidogames/gdvm/semver"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -19,6 +20,7 @@ const CACHE_FOLDER = "godot"
 
 type Service struct {
 	Environment *environment.Environment
+	Fetcher     *fetcher.Fetcher
 	Config      *config.Config
 }
 
@@ -164,6 +166,41 @@ func (s *Service) Install(semver semver.Semver) error {
 	return nil
 }
 
+func (s *Service) Use(semver semver.Semver) error {
+	if s.Config.Verbose {
+		utils.Printlnf("Attempting to use '%s' godot...", semver.GodotString())
+	}
+
+	targetPath, err := s.Fetcher.TargetPath(semver)
+	if err != nil {
+		return fmt.Errorf("cannot determine target path: %w", err)
+	}
+
+	linkPath := s.Fetcher.LinkPath(semver)
+
+	if s.Config.Verbose {
+		utils.Printlnf("Creating godot symlink: %s => %s", linkPath, targetPath)
+	}
+
+	err = os.MkdirAll(s.Config.BinDirectory, utils.OS_DIRECTORY)
+	if err != nil {
+		return fmt.Errorf("cannot make directory: %w", err)
+	}
+
+	err = os.RemoveAll(linkPath)
+	if err != nil {
+		return fmt.Errorf("cannot remove link path: %w", err)
+	}
+
+	err = os.Symlink(targetPath, linkPath)
+	if err != nil {
+		return fmt.Errorf("cannot create link: %w", err)
+	}
+
+	utils.Printlnf("Using '%s' godot", semver.GodotString())
+	return nil
+}
+
 func (s *Service) List() error {
 	entries, err := os.ReadDir(s.Config.GodotRootDirectory)
 	if !errors.Is(err, os.ErrNotExist) && err != nil {
@@ -214,8 +251,10 @@ func (s *Service) archivePath(name string) string {
 }
 
 func New(environment *environment.Environment, config *config.Config) *Service {
+	fetcher := fetcher.New(config)
 	return &Service{
 		Environment: environment,
+		Fetcher:     fetcher,
 		Config:      config,
 	}
 }
