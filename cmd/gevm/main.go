@@ -4,15 +4,15 @@ import (
 	"log"
 
 	"github.com/alecthomas/kong"
-	"github.com/bashidogames/gdvm"
-	"github.com/bashidogames/gdvm/cmd/gdvm/cache"
-	"github.com/bashidogames/gdvm/cmd/gdvm/exporttemplates"
-	"github.com/bashidogames/gdvm/cmd/gdvm/godot"
-	"github.com/bashidogames/gdvm/cmd/gdvm/settings"
-	"github.com/bashidogames/gdvm/cmd/gdvm/shortcuts"
-	"github.com/bashidogames/gdvm/cmd/gdvm/version"
-	"github.com/bashidogames/gdvm/cmd/gdvm/versions"
-	"github.com/bashidogames/gdvm/config"
+	"github.com/bashidogames/gevm"
+	"github.com/bashidogames/gevm/cmd/gevm/cache"
+	"github.com/bashidogames/gevm/cmd/gevm/exporttemplates"
+	"github.com/bashidogames/gevm/cmd/gevm/godot"
+	"github.com/bashidogames/gevm/cmd/gevm/settings"
+	"github.com/bashidogames/gevm/cmd/gevm/shortcuts"
+	"github.com/bashidogames/gevm/cmd/gevm/version"
+	"github.com/bashidogames/gevm/cmd/gevm/versions"
+	"github.com/bashidogames/gevm/config"
 )
 
 var CLI struct {
@@ -39,7 +39,7 @@ func main() {
 		log.Fatalf("failed to create config: %s", err)
 	}
 
-	app, err := gdvm.New(config)
+	app, err := gevm.New(config)
 	if err != nil {
 		log.Fatalf("failed to create app: %s", err)
 	}

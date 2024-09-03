@@ -1,6 +1,6 @@
 #define MyAppPublisher "Bashido Games"
-#define MyAppURL "https://github.com/bashidogames/gdvm"
-#define MyAppExeName "gdvm.exe"
+#define MyAppURL "https://github.com/bashidogames/gevm"
+#define MyAppExeName "gevm.exe"
 
 [Setup]
 AppId={#MyAppID}
@@ -11,8 +11,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-OutputBaseFilename=gdvm-windows-{#MyAppArch}-installer
-DefaultDirName={autopf}\gdvm\bin\{#MyAppArch}
+OutputBaseFilename=gevm-windows-{#MyAppArch}-installer
+DefaultDirName={autopf}\gevm\bin\{#MyAppArch}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
@@ -36,8 +36,8 @@ Name: addPath; Description: "Add to PATH"
 [Code]
 const UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#MyAppID}_is1';
 const EnvironmentKey = 'Environment';
-const LogUninstallFilename = 'gdvm-{#MyAppArch}-uninstall.log';
-const LogInstallFilename = 'gdvm-{#MyAppArch}-install.log';
+const LogUninstallFilename = 'gevm-{#MyAppArch}-uninstall.log';
+const LogInstallFilename = 'gevm-{#MyAppArch}-install.log';
 const PathValue = 'Path';
 const LogParam = '/log';
 

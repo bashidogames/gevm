@@ -24,7 +24,7 @@ jobs:
               with:
                 go-version-file: go.mod
             - name: Build Project
-              run: go build ./cmd/gdvm
+              run: go build ./cmd/gevm
               env:
                 GOARCH: ${{ matrix.arch }}
                 GOOS: ${{ matrix.os }}

@@ -1,3 +1,3 @@
-go build ./cmd/gdvm
+go build ./cmd/gevm
 mkdir -p ~/.local/bin
-mv gdvm ~/.local/bin
+mv gevm ~/.local/bin

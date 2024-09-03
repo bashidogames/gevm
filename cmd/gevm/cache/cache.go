@@ -3,12 +3,12 @@ package cache
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
+	"github.com/bashidogames/gevm"
 )
 
 type Clear struct{}
 
-func (c *Clear) Run(app *gdvm.App) error {
+func (c *Clear) Run(app *gevm.App) error {
 	err := app.Cache.Clear()
 	if err != nil {
 		return fmt.Errorf("cannot clear cache: %w", err)

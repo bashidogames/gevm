@@ -1,8 +1,8 @@
 package shortcuts
 
 import (
-	"github.com/bashidogames/gdvm/cmd/gdvm/shortcuts/application"
-	"github.com/bashidogames/gdvm/cmd/gdvm/shortcuts/desktop"
+	"github.com/bashidogames/gevm/cmd/gevm/shortcuts/application"
+	"github.com/bashidogames/gevm/cmd/gevm/shortcuts/desktop"
 )
 
 type Shortcuts struct {

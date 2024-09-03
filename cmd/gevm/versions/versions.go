@@ -3,7 +3,7 @@ package versions
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
+	"github.com/bashidogames/gevm"
 )
 
 type Detailed struct {
@@ -11,7 +11,7 @@ type Detailed struct {
 	Mono bool `help:"View mono versions"`
 }
 
-func (c *Detailed) Run(app *gdvm.App) error {
+func (c *Detailed) Run(app *gevm.App) error {
 	err := app.Versions.Detailed(c.All, c.Mono)
 	if err != nil {
 		return fmt.Errorf("cannot view detailed versions: %w", err)
@@ -25,7 +25,7 @@ type List struct {
 	Mono bool `help:"List mono versions"`
 }
 
-func (c *List) Run(app *gdvm.App) error {
+func (c *List) Run(app *gevm.App) error {
 	err := app.Versions.List(c.All, c.Mono)
 	if err != nil {
 		return fmt.Errorf("cannot list versions: %w", err)

@@ -1,1 +1,1 @@
-# Godot Version Manager
+# Godot Engine Version Manager

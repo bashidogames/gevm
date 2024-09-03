@@ -3,12 +3,12 @@ package settings
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
+	"github.com/bashidogames/gevm"
 )
 
 type Reset struct{}
 
-func (c *Reset) Run(app *gdvm.App) error {
+func (c *Reset) Run(app *gevm.App) error {
 	err := app.Settings.Reset()
 	if err != nil {
 		return fmt.Errorf("cannot reset settings: %w", err)
@@ -19,7 +19,7 @@ func (c *Reset) Run(app *gdvm.App) error {
 
 type List struct{}
 
-func (c *List) Run(app *gdvm.App) error {
+func (c *List) Run(app *gevm.App) error {
 	err := app.Settings.List()
 	if err != nil {
 		return fmt.Errorf("cannot list settings: %w", err)
@@ -33,7 +33,7 @@ type Set struct {
 	Value string `arg:"" help:"Value to set"`
 }
 
-func (c *Set) Run(app *gdvm.App) error {
+func (c *Set) Run(app *gevm.App) error {
 	err := app.Settings.Set(c.Key, c.Value)
 	if err != nil {
 		return fmt.Errorf("cannot set setting: %w", err)
@@ -46,7 +46,7 @@ type Get struct {
 	Key string `arg:"" help:"Key to get config value for"`
 }
 
-func (c *Get) Run(app *gdvm.App) error {
+func (c *Get) Run(app *gevm.App) error {
 	err := app.Settings.Get(c.Key)
 	if err != nil {
 		return fmt.Errorf("cannot get setting: %w", err)
@@ -57,7 +57,7 @@ func (c *Get) Run(app *gdvm.App) error {
 
 type Path struct{}
 
-func (c *Path) Run(app *gdvm.App) error {
+func (c *Path) Run(app *gevm.App) error {
 	err := app.Settings.Path()
 	if err != nil {
 		return fmt.Errorf("cannot print path: %w", err)

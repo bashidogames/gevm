@@ -1,10 +1,10 @@
 package shortcuts
 
 import (
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/services/shortcuts/application"
-	"github.com/bashidogames/gdvm/internal/services/shortcuts/desktop"
-	"github.com/bashidogames/gdvm/internal/services/shortcuts/fetcher"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/services/shortcuts/application"
+	"github.com/bashidogames/gevm/internal/services/shortcuts/desktop"
+	"github.com/bashidogames/gevm/internal/services/shortcuts/fetcher"
 )
 
 type Service struct {

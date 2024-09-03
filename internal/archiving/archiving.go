@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 func Unzip(from string, to string) error {

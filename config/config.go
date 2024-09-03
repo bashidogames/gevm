@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bashidogames/gdvm/internal/platform"
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/internal/platform"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 type Config struct {

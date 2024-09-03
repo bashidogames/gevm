@@ -21,17 +21,17 @@ jobs:
               with:
                 go-version-file: go.mod
             - name: Build Project
-              run: go build -o ./build/ -ldflags "-X github.com/bashidogames/gdvm/cmd/gdvm/version.version=${{ github.ref_name }}" ./cmd/gdvm
+              run: go build -o ./build/ -ldflags "-X github.com/bashidogames/gevm/cmd/gevm/version.version=${{ github.ref_name }}" ./cmd/gevm
               env:
                 GOARCH: ${{ matrix.arch }}
                 GOOS: ${{ matrix.os }}
             - name: Archive Build
-              run: cd build && zip ../gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip * && cd ..
+              run: cd build && zip ../gevm-${{ matrix.os }}-${{ matrix.arch }}.zip * && cd ..
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4
               with:
-                path: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
-                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+                path: gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
+                name: gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
                 if-no-files-found: error
                 retention-days: 1
     windows:
@@ -49,16 +49,16 @@ jobs:
             - name: Download Artifacts
               uses: actions/download-artifact@v4
               with:
-                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+                name: gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
             - name: Extract Build
-              run: 7z x gdvm-${{ matrix.os }}-${{ matrix.arch }}.zip
+              run: 7z x gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
             - name: Package Build
               run: iscc /dMyAppVersion=${{ github.ref_name }} package-${{ matrix.os }}-${{ matrix.arch }}.iss
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4
               with:
-                path: gdvm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
-                name: gdvm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
+                path: gevm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
+                name: gevm-${{ matrix.os }}-${{ matrix.arch }}-installer.exe
                 if-no-files-found: error
                 retention-days: 1
     release:
@@ -72,7 +72,7 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                 merge-multiple: true
-                pattern: gdvm-*
+                pattern: gevm-*
                 path: builds
             - name: Create Release
               run: gh release create ${{ github.ref_name }} --generate-notes --verify-tag builds/*

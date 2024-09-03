@@ -3,8 +3,8 @@ package exporttemplates
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm"
+	"github.com/bashidogames/gevm/semver"
 )
 
 type Download struct {
@@ -13,7 +13,7 @@ type Download struct {
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Download) Run(app *gdvm.App) error {
+func (c *Download) Run(app *gevm.App) error {
 	err := app.ExportTemplates.Download(semver.Maybe(c.Version, c.Release, c.Mono))
 	if err != nil {
 		return fmt.Errorf("cannot download export templates: %w", err)
@@ -28,7 +28,7 @@ type Uninstall struct {
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Uninstall) Run(app *gdvm.App) error {
+func (c *Uninstall) Run(app *gevm.App) error {
 	err := app.ExportTemplates.Uninstall(semver.Maybe(c.Version, c.Release, c.Mono), true)
 	if err != nil {
 		return fmt.Errorf("cannot uninstall export templates: %w", err)
@@ -43,7 +43,7 @@ type Install struct {
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Install) Run(app *gdvm.App) error {
+func (c *Install) Run(app *gevm.App) error {
 	err := app.ExportTemplates.Install(semver.Maybe(c.Version, c.Release, c.Mono))
 	if err != nil {
 		return fmt.Errorf("cannot install export templates: %w", err)
@@ -54,7 +54,7 @@ func (c *Install) Run(app *gdvm.App) error {
 
 type List struct{}
 
-func (c *List) Run(app *gdvm.App) error {
+func (c *List) Run(app *gevm.App) error {
 	err := app.ExportTemplates.List()
 	if err != nil {
 		return fmt.Errorf("cannot list export templates: %w", err)

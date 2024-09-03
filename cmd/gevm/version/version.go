@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 var version string

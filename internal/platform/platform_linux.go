@@ -54,7 +54,7 @@ func DefaultCacheDirectory() (string, error) {
 		return "", fmt.Errorf("cannot determine user cache directory: %w", err)
 	}
 
-	directory := filepath.Join(userCacheDir, "bashidogames", "gdvm")
+	directory := filepath.Join(userCacheDir, "bashidogames", "gevm")
 	return directory, nil
 }
 
@@ -74,7 +74,7 @@ func ConfigPath() (string, error) {
 		return "", fmt.Errorf("cannot determine user config directory: %w", err)
 	}
 
-	directory := filepath.Join(userConfigDir, "bashidogames", "gdvm")
+	directory := filepath.Join(userConfigDir, "bashidogames", "gevm")
 	path := filepath.Join(directory, CONFIG_FILENAME)
 	return path, nil
 }

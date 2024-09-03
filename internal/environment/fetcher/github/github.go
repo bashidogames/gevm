@@ -9,14 +9,14 @@ import (
 	"regexp"
 	"slices"
 
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/downloading"
-	"github.com/bashidogames/gdvm/internal/environment/fetcher"
-	"github.com/bashidogames/gdvm/internal/environment/fetcher/github/mappings"
-	"github.com/bashidogames/gdvm/internal/platform"
-	"github.com/bashidogames/gdvm/internal/repository"
-	"github.com/bashidogames/gdvm/internal/utils"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/downloading"
+	"github.com/bashidogames/gevm/internal/environment/fetcher"
+	"github.com/bashidogames/gevm/internal/environment/fetcher/github/mappings"
+	"github.com/bashidogames/gevm/internal/platform"
+	"github.com/bashidogames/gevm/internal/repository"
+	"github.com/bashidogames/gevm/internal/utils"
+	"github.com/bashidogames/gevm/semver"
 )
 
 const REPOSITORY_URL = "https://api.github.com/repos/godotengine/godot-builds/releases?per_page=100"

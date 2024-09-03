@@ -6,13 +6,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/archiving"
-	"github.com/bashidogames/gdvm/internal/downloading"
-	"github.com/bashidogames/gdvm/internal/environment"
-	"github.com/bashidogames/gdvm/internal/services/godot/fetcher"
-	"github.com/bashidogames/gdvm/internal/utils"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/archiving"
+	"github.com/bashidogames/gevm/internal/downloading"
+	"github.com/bashidogames/gevm/internal/environment"
+	"github.com/bashidogames/gevm/internal/services/godot/fetcher"
+	"github.com/bashidogames/gevm/internal/utils"
+	"github.com/bashidogames/gevm/semver"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
@@ -31,7 +31,7 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver.GodotString())
+		utils.Printlnf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -57,7 +57,7 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver.GodotString())
+		utils.Printlnf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -108,7 +108,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver.GodotString())
+		utils.Printlnf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -145,7 +145,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Godot '%s' not found. Use 'gdvm versions list' to see available versions.", semver.GodotString())
+		utils.Printlnf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -208,7 +208,7 @@ func (s *Service) List() error {
 	}
 
 	if len(entries) == 0 {
-		utils.Printlnf("No godot versions installed")
+		utils.Printlnf("No godot engine versions installed")
 		return nil
 	}
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 const CONTENTS = `[Desktop Entry]

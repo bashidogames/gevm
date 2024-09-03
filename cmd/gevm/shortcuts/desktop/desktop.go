@@ -3,8 +3,8 @@ package desktop
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm"
+	"github.com/bashidogames/gevm/semver"
 )
 
 type Remove struct {
@@ -13,7 +13,7 @@ type Remove struct {
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Remove) Run(app *gdvm.App) error {
+func (c *Remove) Run(app *gevm.App) error {
 	err := app.Shortcuts.Desktop.Remove(semver.Maybe(c.Version, c.Release, c.Mono), true)
 	if err != nil {
 		return fmt.Errorf("cannot remove desktop shortcut: %w", err)
@@ -28,7 +28,7 @@ type Add struct {
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Add) Run(app *gdvm.App) error {
+func (c *Add) Run(app *gevm.App) error {
 	err := app.Shortcuts.Desktop.Add(semver.Maybe(c.Version, c.Release, c.Mono))
 	if err != nil {
 		return fmt.Errorf("cannot add desktop shortcut: %w", err)

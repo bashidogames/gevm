@@ -3,10 +3,10 @@ package environment
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm/internal/environment/fetcher"
-	"github.com/bashidogames/gdvm/internal/platform"
-	"github.com/bashidogames/gdvm/internal/repository"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm/internal/environment/fetcher"
+	"github.com/bashidogames/gevm/internal/platform"
+	"github.com/bashidogames/gevm/internal/repository"
+	"github.com/bashidogames/gevm/semver"
 )
 
 type Environment struct {

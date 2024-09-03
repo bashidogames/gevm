@@ -6,12 +6,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/archiving"
-	"github.com/bashidogames/gdvm/internal/downloading"
-	"github.com/bashidogames/gdvm/internal/environment"
-	"github.com/bashidogames/gdvm/internal/utils"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/archiving"
+	"github.com/bashidogames/gevm/internal/downloading"
+	"github.com/bashidogames/gevm/internal/environment"
+	"github.com/bashidogames/gevm/internal/utils"
+	"github.com/bashidogames/gevm/semver"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
@@ -30,7 +30,7 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *Service) Download(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -107,7 +107,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -151,7 +151,7 @@ func (s *Service) Install(semver semver.Semver) error {
 
 	err = downloading.Download(asset.DownloadURL, archivePath)
 	if errors.Is(err, downloading.ErrNotFound) {
-		utils.Printlnf("Export templates '%s' not found. Use 'gdvm versions list' to see available versions.", semver.ExportTemplatesString())
+		utils.Printlnf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {

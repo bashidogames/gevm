@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 const VERSION_REGEX_PATTERN = "([1-9][0-9]*|0)[.]([1-9][0-9]*|0)([.]([1-9][0-9]*|0))?([.]([1-9][0-9]*|0))?"

@@ -1,6 +1,6 @@
 package mappings
 
-import "github.com/bashidogames/gdvm/internal/platform"
+import "github.com/bashidogames/gevm/internal/platform"
 
 type Mapping struct {
 	System []string

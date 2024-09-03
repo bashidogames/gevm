@@ -3,18 +3,18 @@ package godot
 import (
 	"fmt"
 
-	"github.com/bashidogames/gdvm"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm"
+	"github.com/bashidogames/gevm/semver"
 )
 
 type Download struct {
-	Version                string `arg:"" help:"Godot version to download to cache in the format x.x.x.x, x.x.x or x.x"`
+	Version                string `arg:"" help:"Godot engine version to download to cache in the format x.x.x.x, x.x.x or x.x"`
 	IncludeExportTemplates bool   `help:"Include export templates in download"`
 	Release                string `default:"stable" help:"Release to use (dev1, alpha2, beta3, rc4, stable, etc)"`
 	Mono                   bool   `help:"Use mono version"`
 }
 
-func (c *Download) Run(app *gdvm.App) error {
+func (c *Download) Run(app *gevm.App) error {
 	if c.IncludeExportTemplates {
 		err := app.ExportTemplates.Download(semver.Maybe(c.Version, c.Release, c.Mono))
 		if err != nil {
@@ -31,14 +31,14 @@ func (c *Download) Run(app *gdvm.App) error {
 }
 
 type Uninstall struct {
-	Version                string `arg:"" help:"Godot version to uninstall in the format x.x.x.x, x.x.x or x.x"`
+	Version                string `arg:"" help:"Godot engine version to uninstall in the format x.x.x.x, x.x.x or x.x"`
 	ExcludeExportTemplates bool   `help:"Exclude export templates in uninstall"`
 	ExcludeShortcuts       bool   `help:"Exclude shortcuts in uninstall"`
 	Release                string `default:"stable" help:"Release to use (dev1, alpha2, beta3, rc4, stable, etc)"`
 	Mono                   bool   `help:"Use mono version"`
 }
 
-func (c *Uninstall) Run(app *gdvm.App) error {
+func (c *Uninstall) Run(app *gevm.App) error {
 	if !c.ExcludeExportTemplates {
 		err := app.ExportTemplates.Uninstall(semver.Maybe(c.Version, c.Release, c.Mono), true)
 		if err != nil {
@@ -69,7 +69,7 @@ func (c *Uninstall) Run(app *gdvm.App) error {
 }
 
 type Install struct {
-	Version                string `arg:"" help:"Godot version to download and install in the format x.x.x.x, x.x.x or x.x"`
+	Version                string `arg:"" help:"Godot engine version to download and install in the format x.x.x.x, x.x.x or x.x"`
 	IncludeExportTemplates bool   `help:"Include export templates in install"`
 	Application            bool   `help:"Add application shortcut"`
 	Desktop                bool   `help:"Add desktop shortcut"`
@@ -77,7 +77,7 @@ type Install struct {
 	Mono                   bool   `help:"Use mono version"`
 }
 
-func (c *Install) Run(app *gdvm.App) error {
+func (c *Install) Run(app *gevm.App) error {
 	if c.IncludeExportTemplates {
 		err := app.ExportTemplates.Install(semver.Maybe(c.Version, c.Release, c.Mono))
 		if err != nil {
@@ -107,12 +107,12 @@ func (c *Install) Run(app *gdvm.App) error {
 }
 
 type Use struct {
-	Version string `arg:"" help:"Godot version to use in the format x.x.x.x, x.x.x or x.x"`
+	Version string `arg:"" help:"Godot engine version to use in the format x.x.x.x, x.x.x or x.x"`
 	Release string `default:"stable" help:"Release to use (dev1, alpha2, beta3, rc4, stable, etc)"`
 	Mono    bool   `help:"Use mono version"`
 }
 
-func (c *Use) Run(app *gdvm.App) error {
+func (c *Use) Run(app *gevm.App) error {
 	err := app.Godot.Use(semver.Maybe(c.Version, c.Release, c.Mono))
 	if err != nil {
 		return fmt.Errorf("cannot use godot: %w", err)
@@ -123,7 +123,7 @@ func (c *Use) Run(app *gdvm.App) error {
 
 type List struct{}
 
-func (c *List) Run(app *gdvm.App) error {
+func (c *List) Run(app *gevm.App) error {
 	err := app.Godot.List()
 	if err != nil {
 		return fmt.Errorf("cannot list godot: %w", err)
@@ -137,5 +137,5 @@ type Godot struct {
 	Uninstall Uninstall `cmd:"" help:"Uninstall godot engine by version"`
 	Install   Install   `cmd:"" help:"Install godot engine by version"`
 	Use       Use       `cmd:"" help:"Use godot engine by version"`
-	List      List      `cmd:"" help:"List all current godot versions"`
+	List      List      `cmd:"" help:"List all current godot engine versions"`
 }

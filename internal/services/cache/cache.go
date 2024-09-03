@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/utils"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/utils"
 )
 
 type Service struct {

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bashidogames/gdvm/config"
-	"github.com/bashidogames/gdvm/internal/services/shortcuts/fetcher"
-	"github.com/bashidogames/gdvm/internal/shortcut"
-	"github.com/bashidogames/gdvm/internal/utils"
-	"github.com/bashidogames/gdvm/semver"
+	"github.com/bashidogames/gevm/config"
+	"github.com/bashidogames/gevm/internal/services/shortcuts/fetcher"
+	"github.com/bashidogames/gevm/internal/shortcut"
+	"github.com/bashidogames/gevm/internal/utils"
+	"github.com/bashidogames/gevm/semver"
 )
 
 type Service struct {
