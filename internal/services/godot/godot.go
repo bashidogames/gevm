@@ -201,6 +201,16 @@ func (s *Service) Use(semver semver.Semver) error {
 	return nil
 }
 
+func (s *Service) Path(semver semver.Semver) error {
+	targetPath, err := s.Fetcher.TargetPath(semver)
+	if err != nil {
+		return fmt.Errorf("cannot determine target path: %w", err)
+	}
+
+	utils.Printlnf(targetPath)
+	return nil
+}
+
 func (s *Service) List() error {
 	entries, err := os.ReadDir(s.Config.GodotRootDirectory)
 	if !errors.Is(err, os.ErrNotExist) && err != nil {

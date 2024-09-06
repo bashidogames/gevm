@@ -121,6 +121,21 @@ func (c *Use) Run(app *gevm.App) error {
 	return nil
 }
 
+type Path struct {
+	Version string `arg:"" help:"Godot engine version to use in the format x.x.x.x, x.x.x or x.x"`
+	Release string `default:"stable" help:"Release to use (dev1, alpha2, beta3, rc4, stable, etc)"`
+	Mono    bool   `help:"Use mono version"`
+}
+
+func (c *Path) Run(app *gevm.App) error {
+	err := app.Godot.Path(semver.Maybe(c.Version, c.Release, c.Mono))
+	if err != nil {
+		return fmt.Errorf("cannot print path: %w", err)
+	}
+
+	return nil
+}
+
 type List struct{}
 
 func (c *List) Run(app *gevm.App) error {
@@ -137,5 +152,6 @@ type Godot struct {
 	Uninstall Uninstall `cmd:"" help:"Uninstall godot engine by version"`
 	Install   Install   `cmd:"" help:"Install godot engine by version"`
 	Use       Use       `cmd:"" help:"Use godot engine by version"`
+	Path      Path      `cmd:"" help:"Print path to godot engine version"`
 	List      List      `cmd:"" help:"List all current godot engine versions"`
 }
