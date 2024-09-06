@@ -27,7 +27,9 @@ func (f *Fetcher) LinkPath(semver semver.Semver) string {
 }
 
 func (f *Fetcher) locateExecutable(root string) (string, error) {
-	return utils.LocateExecutable(ExecutableRegex, root, false)
+	return utils.LocateExecutable(func(filename string) bool {
+		return ExecutableRegex.MatchString(filename)
+	}, root, false)
 }
 
 func New(config *config.Config) *Fetcher {

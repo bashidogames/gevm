@@ -6,10 +6,9 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"regexp"
 )
 
-func LocateExecutable(regex *regexp.Regexp, root string, isDir bool) (string, error) {
+func LocateExecutable(callback func(string) bool, root string, isDir bool) (string, error) {
 	var result string
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -20,7 +19,7 @@ func LocateExecutable(regex *regexp.Regexp, root string, isDir bool) (string, er
 			return nil
 		}
 
-		if !regex.MatchString(filepath.Base(path)) {
+		if !callback(filepath.Base(path)) {
 			return nil
 		}
 

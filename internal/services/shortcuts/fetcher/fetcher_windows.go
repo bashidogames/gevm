@@ -10,11 +10,13 @@ import (
 	"github.com/bashidogames/gevm/semver"
 )
 
-const EXECUTABLE_REGEX_PATTERN = "Godot((?!console).)*?[.]exe"
+const EXECUTABLE_REGEX_PATTERN = "Godot(.*?)[.]exe"
+const INVALID_REGEX_PATTERN = "(console)[.]exe"
 const SHORTCUT_FILENAME = "Godot %s.lnk"
 const SHORTCUT_NAME = "Godot %s"
 
 var ExecutableRegex = regexp.MustCompile(EXECUTABLE_REGEX_PATTERN)
+var InvalidRegex = regexp.MustCompile(INVALID_REGEX_PATTERN)
 
 type Fetcher struct {
 	Config *config.Config
@@ -41,7 +43,9 @@ func (f *Fetcher) shortcutFilename(semver semver.Semver) string {
 }
 
 func (f *Fetcher) locateExecutable(root string) (string, error) {
-	return utils.LocateExecutable(ExecutableRegex, root, false)
+	return utils.LocateExecutable(func(filename string) bool {
+		return ExecutableRegex.MatchString(filename) && !InvalidRegex.MatchString(filename)
+	}, root, false)
 }
 
 func New(config *config.Config) *Fetcher {

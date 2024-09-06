@@ -14,10 +14,10 @@ const RELEASE_REGEX_PATTERN = "((dev|alpha|beta|rc)([1-9][0-9]*|0)|stable)([-_.]
 const RELVER_REGEX_PATTERN = "(" + VERSION_REGEX_PATTERN + ")[-_.](" + RELEASE_REGEX_PATTERN + ")"
 const SEMVER_REGEX_PATTERN = RELVER_REGEX_PATTERN + "([-_.](mono))?"
 
-var VersionRegex = regexp.MustCompile("^" + VERSION_REGEX_PATTERN + "$")
-var ReleaseRegex = regexp.MustCompile("^" + RELEASE_REGEX_PATTERN + "$")
-var RelverRegex = regexp.MustCompile("^" + RELVER_REGEX_PATTERN + "$")
-var SemverRegex = regexp.MustCompile("^" + SEMVER_REGEX_PATTERN + "$")
+var VersionRegex = regexp.MustCompile(VERSION_REGEX_PATTERN)
+var ReleaseRegex = regexp.MustCompile(RELEASE_REGEX_PATTERN)
+var RelverRegex = regexp.MustCompile(RELVER_REGEX_PATTERN)
+var SemverRegex = regexp.MustCompile(SEMVER_REGEX_PATTERN)
 
 var ErrRegexFailed = errors.New("regex failed")
 
