@@ -9,10 +9,12 @@ import (
 	"github.com/bashidogames/gevm/semver"
 )
 
-const EXECUTABLE_REGEX_PATTERN = "Godot((?!console).)*?[.]exe"
-const LINK_FILENAME = "godot"
+const EXECUTABLE_REGEX_PATTERN = "Godot(.*?)[.]exe"
+const INVALID_REGEX_PATTERN = "(console)[.]exe"
+const LINK_FILENAME = "godot.exe"
 
 var ExecutableRegex = regexp.MustCompile(EXECUTABLE_REGEX_PATTERN)
+var InvalidRegex = regexp.MustCompile(INVALID_REGEX_PATTERN)
 
 type Fetcher struct {
 	Config *config.Config
@@ -27,7 +29,9 @@ func (f *Fetcher) LinkPath(semver semver.Semver) string {
 }
 
 func (f *Fetcher) locateExecutable(root string) (string, error) {
-	return utils.LocateExecutable(ExecutableRegex, root, true)
+	return utils.LocateExecutable(func(filename string) bool {
+		return ExecutableRegex.MatchString(filename) && !InvalidRegex.MatchString(filename)
+	}, root, false)
 }
 
 func New(config *config.Config) *Fetcher {
