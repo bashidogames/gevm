@@ -41,7 +41,7 @@ func (c *Config) Reset() error {
 }
 
 func (c *Config) Save() error {
-	c.Logger.Trace("Attempting to save config: %s", c.ConfigPath)
+	c.Logger.Tracef("Attempting to save config: %s", c.ConfigPath)
 
 	err := os.MkdirAll(filepath.Dir(c.ConfigPath), utils.OS_DIRECTORY)
 	if err != nil {
@@ -70,7 +70,7 @@ func (c *Config) Save() error {
 }
 
 func (c *Config) load() error {
-	c.Logger.Trace("Attempting to load config: %s", c.ConfigPath)
+	c.Logger.Tracef("Attempting to load config: %s", c.ConfigPath)
 
 	file, err := os.Open(c.ConfigPath)
 	if os.IsNotExist(err) {

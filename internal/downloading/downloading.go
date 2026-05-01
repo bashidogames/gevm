@@ -23,7 +23,7 @@ func Download(logger logger.Logger, url string, path string, silent bool) error 
 	}
 
 	if exists {
-		logger.Info("Cached '%s' found", filepath.Base(path))
+		logger.Infof("Cached '%s' found", filepath.Base(path))
 		return nil
 	}
 
@@ -38,7 +38,7 @@ func Download(logger logger.Logger, url string, path string, silent bool) error 
 		return fmt.Errorf("failed to parse header: %w", err)
 	}
 
-	logger.Info("Downloading '%s'", filepath.Base(path))
+	logger.Infof("Downloading '%s'", filepath.Base(path))
 
 	progress := progressbar.NewOptions64(size,
 		progressbar.OptionSetDescription(fmt.Sprintf("'%s'", filepath.Base(path))),

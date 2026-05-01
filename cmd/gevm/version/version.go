@@ -19,9 +19,9 @@ func (c *Version) Run() error {
 		semver = "dev"
 	}
 
-	utils.Printlnf(runtime.GOOS)
-	utils.Printlnf(runtime.GOARCH)
-	utils.Printlnf(semver)
+	utils.Println(runtime.GOOS)
+	utils.Println(runtime.GOARCH)
+	utils.Println(semver)
 
 	return nil
 }

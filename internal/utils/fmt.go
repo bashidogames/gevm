@@ -5,5 +5,9 @@ import (
 )
 
 func Printlnf(format string, a ...any) (n int, err error) {
-	return fmt.Println(fmt.Sprintf(format, a...))
+	return Println(fmt.Sprintf(format, a...))
+}
+
+func Println(a ...any) (n int, err error) {
+	return fmt.Println(a...)
 }

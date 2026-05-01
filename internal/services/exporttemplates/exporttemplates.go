@@ -24,11 +24,11 @@ type Service struct {
 }
 
 func (s *Service) Download(semver semver.Semver) error {
-	s.Config.Logger.Debug("Attempting to download '%s' export templates...", semver.ExportTemplatesString())
+	s.Config.Logger.Debugf("Attempting to download '%s' export templates...", semver.ExportTemplatesString())
 
 	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
+		s.Config.Logger.Errorf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -43,28 +43,28 @@ func (s *Service) Download(semver semver.Semver) error {
 	}
 
 	if exists {
-		s.Config.Logger.Info("Export templates '%s' already downloaded", semver.ExportTemplatesString())
+		s.Config.Logger.Infof("Export templates '%s' already downloaded", semver.ExportTemplatesString())
 		return nil
 	}
 
-	s.Config.Logger.Debug("Downloading from: %s", asset.DownloadURL)
-	s.Config.Logger.Debug("Downloading to: %s", archivePath)
+	s.Config.Logger.Debugf("Downloading from: %s", asset.DownloadURL)
+	s.Config.Logger.Debugf("Downloading to: %s", archivePath)
 
 	err = downloading.Download(s.Config.Logger, asset.DownloadURL, archivePath, s.Config.Silent)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
+		s.Config.Logger.Errorf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	s.Config.Logger.Info("Export templates '%s' downloaded", semver.ExportTemplatesString())
+	s.Config.Logger.Infof("Export templates '%s' downloaded", semver.ExportTemplatesString())
 	return nil
 }
 
 func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
-	s.Config.Logger.Debug("Attempting to uninstall '%s' export templates...", semver.ExportTemplatesString())
+	s.Config.Logger.Debugf("Attempting to uninstall '%s' export templates...", semver.ExportTemplatesString())
 
 	targetDirectory := s.targetDirectory(semver)
 
@@ -75,29 +75,29 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			s.Config.Logger.Error("Export templates '%s' not found", semver.ExportTemplatesString())
+			s.Config.Logger.Errorf("Export templates '%s' not found", semver.ExportTemplatesString())
 		}
 
 		return nil
 	}
 
-	s.Config.Logger.Debug("Removing directory: %s", targetDirectory)
+	s.Config.Logger.Debugf("Removing directory: %s", targetDirectory)
 
 	err = os.RemoveAll(targetDirectory)
 	if err != nil {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	s.Config.Logger.Info("Export templates '%s' uninstalled", semver.ExportTemplatesString())
+	s.Config.Logger.Infof("Export templates '%s' uninstalled", semver.ExportTemplatesString())
 	return nil
 }
 
 func (s *Service) Install(semver semver.Semver) error {
-	s.Config.Logger.Debug("Attempting to install '%s' export templates...", semver.ExportTemplatesString())
+	s.Config.Logger.Debugf("Attempting to install '%s' export templates...", semver.ExportTemplatesString())
 
 	asset, err := s.Environment.FetchExportTemplatesAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
+		s.Config.Logger.Errorf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
@@ -115,7 +115,7 @@ func (s *Service) Install(semver semver.Semver) error {
 	}
 
 	if exists {
-		s.Config.Logger.Info("Export templates '%s' already installed", semver.ExportTemplatesString())
+		s.Config.Logger.Infof("Export templates '%s' already installed", semver.ExportTemplatesString())
 		return nil
 	}
 
@@ -134,35 +134,35 @@ func (s *Service) Install(semver semver.Semver) error {
 		return fmt.Errorf("cannot remove temp directory: %w", err)
 	}
 
-	s.Config.Logger.Debug("Downloading from: %s", asset.DownloadURL)
-	s.Config.Logger.Debug("Downloading to: %s", archivePath)
+	s.Config.Logger.Debugf("Downloading from: %s", asset.DownloadURL)
+	s.Config.Logger.Debugf("Downloading to: %s", archivePath)
 
 	err = downloading.Download(s.Config.Logger, asset.DownloadURL, archivePath, s.Config.Silent)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
+		s.Config.Logger.Errorf("Export templates '%s' not found. Use 'gevm versions list' to see available versions.", semver.ExportTemplatesString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	s.Config.Logger.Debug("Unzipping from: %s", archivePath)
-	s.Config.Logger.Debug("Unzipping to: %s", rootDirectory)
+	s.Config.Logger.Debugf("Unzipping from: %s", archivePath)
+	s.Config.Logger.Debugf("Unzipping to: %s", rootDirectory)
 
 	err = archiving.Unzip(s.Config.Logger, archivePath, rootDirectory)
 	if err != nil {
 		return fmt.Errorf("unzip failed: %w", err)
 	}
 
-	s.Config.Logger.Debug("Moving from: %s", tempDirectory)
-	s.Config.Logger.Debug("Moving to: %s", targetDirectory)
+	s.Config.Logger.Debugf("Moving from: %s", tempDirectory)
+	s.Config.Logger.Debugf("Moving to: %s", targetDirectory)
 
 	err = os.Rename(tempDirectory, targetDirectory)
 	if err != nil {
 		return fmt.Errorf("move failed: %w", err)
 	}
 
-	s.Config.Logger.Info("Export templates '%s' installed", semver.ExportTemplatesString())
+	s.Config.Logger.Infof("Export templates '%s' installed", semver.ExportTemplatesString())
 	return nil
 }
 
@@ -173,7 +173,7 @@ func (s *Service) List() error {
 	}
 
 	if len(entries) == 0 {
-		s.Config.Logger.Info("No export templates installed")
+		s.Config.Logger.Infof("No export templates installed")
 		return nil
 	}
 
@@ -187,7 +187,7 @@ func (s *Service) List() error {
 
 		semver, err := semver.Parse(entry.Name())
 		if err != nil {
-			s.Config.Logger.Warning("Failed to recognize version: %s", err)
+			s.Config.Logger.Warningf("Failed to recognize version: %s", err)
 			continue
 		}
 
@@ -217,7 +217,7 @@ func (s *Service) Clear() error {
 
 		semver, err := semver.Parse(entry.Name())
 		if err != nil {
-			s.Config.Logger.Warning("Failed to recognize version: %s", err)
+			s.Config.Logger.Warningf("Failed to recognize version: %s", err)
 			continue
 		}
 

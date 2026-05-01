@@ -40,7 +40,7 @@ type Data struct {
 }
 
 func (g *Github) FetchAsset(platform platform.Platform, semver semver.Semver) (*repository.Asset, error) {
-	g.Config.Logger.Trace("Fetching '%s' assets for platform: %s", semver.Relver.GodotString(), platform)
+	g.Config.Logger.Tracef("Fetching '%s' assets for platform: %s", semver.Relver.GodotString(), platform)
 
 	mapping, ok := mappings.Mappings[platform]
 	if !ok {
@@ -50,7 +50,7 @@ func (g *Github) FetchAsset(platform platform.Platform, semver semver.Semver) (*
 	url := fmt.Sprintf(ASSET_URL, semver.Relver.GodotString())
 	var data Data
 
-	g.Config.Logger.Trace("Fetching data from url: %s", url)
+	g.Config.Logger.Tracef("Fetching data from url: %s", url)
 
 	err := downloading.Fetch(url, func(header http.Header, bytes []byte) error {
 		err := json.Unmarshal(bytes, &data)
@@ -81,21 +81,21 @@ func (g *Github) FetchAsset(platform platform.Platform, semver semver.Semver) (*
 		arch := parts[4]
 
 		if slices.Index(mapping.System, system) < 0 {
-			g.Config.Logger.Trace("Invalid system for asset: %s", asset.Name)
+			g.Config.Logger.Tracef("Invalid system for asset: %s", asset.Name)
 			continue
 		}
 
 		if slices.Index(mapping.Arch, arch) < 0 {
-			g.Config.Logger.Trace("Invalid arch for asset: %s", asset.Name)
+			g.Config.Logger.Tracef("Invalid arch for asset: %s", asset.Name)
 			continue
 		}
 
 		if semver.Mono != isMono {
-			g.Config.Logger.Trace("Invalid mono for asset: %s", asset.Name)
+			g.Config.Logger.Tracef("Invalid mono for asset: %s", asset.Name)
 			continue
 		}
 
-		g.Config.Logger.Trace("Asset found: %s", asset.Name)
+		g.Config.Logger.Tracef("Asset found: %s", asset.Name)
 
 		assets = append(assets, repository.Asset{
 			DownloadURL: asset.DownloadURL,
@@ -119,7 +119,7 @@ func (g *Github) FetchDownloads(mono bool) ([]repository.Download, error) {
 	var datas []Data
 
 	for {
-		g.Config.Logger.Trace("Fetching data from url: %s", url)
+		g.Config.Logger.Tracef("Fetching data from url: %s", url)
 
 		err := downloading.Fetch(url, func(header http.Header, bytes []byte) error {
 			var data []Data
@@ -192,7 +192,7 @@ func (g *Github) FetchDownloads(mono bool) ([]repository.Download, error) {
 				if exists {
 					override := mappings.Overrides[platform]
 					if len(override) <= 0 {
-						g.Config.Logger.Warning("Asset already exists for '%s' platform: %s == %s", platform, existing.Name, asset.Name)
+						g.Config.Logger.Warningf("Asset already exists for '%s' platform: %s == %s", platform, existing.Name, asset.Name)
 						continue
 					}
 
@@ -210,7 +210,7 @@ func (g *Github) FetchDownloads(mono bool) ([]repository.Download, error) {
 			}
 
 			if !found {
-				g.Config.Logger.Warning("No mapping found for asset: %s", asset.Name)
+				g.Config.Logger.Warningf("No mapping found for asset: %s", asset.Name)
 			}
 		}
 

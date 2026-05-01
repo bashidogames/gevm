@@ -22,44 +22,84 @@ type Logging struct {
 	Level Level
 }
 
-func (l Logging) Error(format string, a ...any) {
+func (l Logging) Errorf(format string, a ...any) {
 	if !l.ShouldLog(ERROR) {
 		return
 	}
 
-	utils.Printlnf("ERROR: %s", fmt.Sprintf(format, a...))
+	l.Error(fmt.Sprintf(format, a...))
 }
 
-func (l Logging) Warning(format string, a ...any) {
+func (l Logging) Error(msg string) {
+	if !l.ShouldLog(ERROR) {
+		return
+	}
+
+	utils.Printlnf("ERROR: %s", msg)
+}
+
+func (l Logging) Warningf(format string, a ...any) {
 	if !l.ShouldLog(WARNING) {
 		return
 	}
 
-	utils.Printlnf("WARNING: %s", fmt.Sprintf(format, a...))
+	l.Warning(fmt.Sprintf(format, a...))
 }
 
-func (l Logging) Info(format string, a ...any) {
+func (l Logging) Warning(msg string) {
+	if !l.ShouldLog(WARNING) {
+		return
+	}
+
+	utils.Printlnf("WARNING: %s", msg)
+}
+
+func (l Logging) Infof(format string, a ...any) {
 	if !l.ShouldLog(INFO) {
 		return
 	}
 
-	utils.Printlnf(format, a...)
+	l.Info(fmt.Sprintf(format, a...))
 }
 
-func (l Logging) Debug(format string, a ...any) {
+func (l Logging) Info(msg string) {
+	if !l.ShouldLog(INFO) {
+		return
+	}
+
+	utils.Println(msg)
+}
+
+func (l Logging) Debugf(format string, a ...any) {
 	if !l.ShouldLog(DEBUG) {
 		return
 	}
 
-	utils.Printlnf(format, a...)
+	l.Debug(fmt.Sprintf(format, a...))
 }
 
-func (l Logging) Trace(format string, a ...any) {
+func (l Logging) Debug(msg string) {
+	if !l.ShouldLog(DEBUG) {
+		return
+	}
+
+	utils.Println(msg)
+}
+
+func (l Logging) Tracef(format string, a ...any) {
 	if !l.ShouldLog(TRACE) {
 		return
 	}
 
-	utils.Printlnf(format, a...)
+	l.Trace(fmt.Sprintf(format, a...))
+}
+
+func (l Logging) Trace(msg string) {
+	if !l.ShouldLog(TRACE) {
+		return
+	}
+
+	utils.Println(msg)
 }
 
 func (l Logging) ShouldLog(level Level) bool {

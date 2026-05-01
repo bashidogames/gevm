@@ -12,7 +12,7 @@ type Service struct {
 }
 
 func (s *Service) Clear() error {
-	s.Config.Logger.Debug("Attempting to clear cache directory: %s", s.Config.CacheDirectory)
+	s.Config.Logger.Debugf("Attempting to clear cache directory: %s", s.Config.CacheDirectory)
 
 	err := os.RemoveAll(s.Config.CacheDirectory)
 	if err != nil {

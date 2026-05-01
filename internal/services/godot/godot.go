@@ -33,11 +33,11 @@ type Service struct {
 }
 
 func (s *Service) Download(semver semver.Semver) error {
-	s.Config.Logger.Debug("Attempting to download '%s' godot...", semver.GodotString())
+	s.Config.Logger.Debugf("Attempting to download '%s' godot...", semver.GodotString())
 
 	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
+		s.Config.Logger.Errorf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -52,28 +52,28 @@ func (s *Service) Download(semver semver.Semver) error {
 	}
 
 	if exists {
-		s.Config.Logger.Info("Godot '%s' already downloaded", semver.GodotString())
+		s.Config.Logger.Infof("Godot '%s' already downloaded", semver.GodotString())
 		return nil
 	}
 
-	s.Config.Logger.Debug("Downloading from: %s", asset.DownloadURL)
-	s.Config.Logger.Debug("Downloading to: %s", archivePath)
+	s.Config.Logger.Debugf("Downloading from: %s", asset.DownloadURL)
+	s.Config.Logger.Debugf("Downloading to: %s", archivePath)
 
 	err = downloading.Download(s.Config.Logger, asset.DownloadURL, archivePath, s.Config.Silent)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
+		s.Config.Logger.Errorf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	s.Config.Logger.Info("Godot '%s' downloaded", semver.GodotString())
+	s.Config.Logger.Infof("Godot '%s' downloaded", semver.GodotString())
 	return nil
 }
 
 func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
-	s.Config.Logger.Debug("Attempting to uninstall '%s' godot...", semver.GodotString())
+	s.Config.Logger.Debugf("Attempting to uninstall '%s' godot...", semver.GodotString())
 
 	targetDirectory := s.targetDirectory(semver)
 
@@ -84,29 +84,29 @@ func (s *Service) Uninstall(semver semver.Semver, logMissing bool) error {
 
 	if !exists {
 		if logMissing {
-			s.Config.Logger.Error("Godot '%s' not found", semver.GodotString())
+			s.Config.Logger.Errorf("Godot '%s' not found", semver.GodotString())
 		}
 
 		return nil
 	}
 
-	s.Config.Logger.Debug("Removing directory: %s", targetDirectory)
+	s.Config.Logger.Debugf("Removing directory: %s", targetDirectory)
 
 	err = os.RemoveAll(targetDirectory)
 	if err != nil {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	s.Config.Logger.Info("Godot '%s' uninstalled", semver.GodotString())
+	s.Config.Logger.Infof("Godot '%s' uninstalled", semver.GodotString())
 	return nil
 }
 
 func (s *Service) Install(semver semver.Semver) error {
-	s.Config.Logger.Debug("Attempting to install '%s' godot...", semver.GodotString())
+	s.Config.Logger.Debugf("Attempting to install '%s' godot...", semver.GodotString())
 
 	asset, err := s.Environment.FetchGodotAsset(semver)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
+		s.Config.Logger.Errorf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
@@ -122,7 +122,7 @@ func (s *Service) Install(semver semver.Semver) error {
 	}
 
 	if exists {
-		s.Config.Logger.Info("Godot '%s' already installed", semver.GodotString())
+		s.Config.Logger.Infof("Godot '%s' already installed", semver.GodotString())
 		return nil
 	}
 
@@ -136,41 +136,41 @@ func (s *Service) Install(semver semver.Semver) error {
 		return fmt.Errorf("cannot remove target directory: %w", err)
 	}
 
-	s.Config.Logger.Debug("Downloading from: %s", asset.DownloadURL)
-	s.Config.Logger.Debug("Downloading to: %s", archivePath)
+	s.Config.Logger.Debugf("Downloading from: %s", asset.DownloadURL)
+	s.Config.Logger.Debugf("Downloading to: %s", archivePath)
 
 	err = downloading.Download(s.Config.Logger, asset.DownloadURL, archivePath, s.Config.Silent)
 	if errors.Is(err, downloading.ErrNotFound) {
-		s.Config.Logger.Error("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
+		s.Config.Logger.Errorf("Godot '%s' not found. Use 'gevm versions list' to see available versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("download failed: %w", err)
 	}
 
-	s.Config.Logger.Debug("Unzipping from: %s", archivePath)
-	s.Config.Logger.Debug("Unzipping to: %s", targetDirectory)
+	s.Config.Logger.Debugf("Unzipping from: %s", archivePath)
+	s.Config.Logger.Debugf("Unzipping to: %s", targetDirectory)
 
 	err = archiving.Unzip(s.Config.Logger, archivePath, targetDirectory)
 	if err != nil {
 		return fmt.Errorf("unzip failed: %w", err)
 	}
 
-	s.Config.Logger.Info("Godot '%s' installed", semver.GodotString())
+	s.Config.Logger.Infof("Godot '%s' installed", semver.GodotString())
 	return nil
 }
 
 func (s *Service) Path(semver semver.Semver) error {
 	targetPath, err := s.ExecutableLocator.Find(semver)
 	if errors.Is(err, os.ErrNotExist) {
-		s.Config.Logger.Error("Godot '%s' not found. Use `gevm godot list` to see installed versions.", semver.GodotString())
+		s.Config.Logger.Errorf("Godot '%s' not found. Use `gevm godot list` to see installed versions.", semver.GodotString())
 		return nil
 	}
 	if err != nil {
 		return fmt.Errorf("cannot determine target path: %w", err)
 	}
 
-	utils.Printlnf(targetPath)
+	utils.Println(targetPath)
 	return nil
 }
 
@@ -195,13 +195,13 @@ func (s *Service) List() error {
 
 		semver, err := semver.Parse(entry.Name())
 		if err != nil {
-			s.Config.Logger.Warning("Failed to recognize version: %s", err)
+			s.Config.Logger.Warningf("Failed to recognize version: %s", err)
 			continue
 		}
 
 		exportTemplates, err := s.ExportTemplatesChecker.Exists(semver)
 		if err != nil {
-			s.Config.Logger.Warning("Failed to check export templates existence: %s", err)
+			s.Config.Logger.Warningf("Failed to check export templates existence: %s", err)
 		}
 
 		version := semver.Relver.Version.String()
@@ -230,7 +230,7 @@ func (s *Service) Clear() error {
 
 		semver, err := semver.Parse(entry.Name())
 		if err != nil {
-			s.Config.Logger.Warning("Failed to recognize version: %s", err)
+			s.Config.Logger.Warningf("Failed to recognize version: %s", err)
 			continue
 		}
 

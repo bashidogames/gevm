@@ -52,7 +52,7 @@ func (s *Service) Set(key string, value string) error {
 		return nil
 	})
 	if err == ErrNotFound {
-		s.Config.Logger.Error("Settings key '%s' not found. Use 'gevm settings list' to see available settings.", key)
+		s.Config.Logger.Errorf("Settings key '%s' not found. Use 'gevm settings list' to see available settings.", key)
 		return nil
 	}
 	if err != nil {
@@ -73,7 +73,7 @@ func (s *Service) Get(key string) error {
 		return nil
 	})
 	if err == ErrNotFound {
-		s.Config.Logger.Error("Settings key '%s' not found. Use 'gevm settings list' to see available settings.", key)
+		s.Config.Logger.Errorf("Settings key '%s' not found. Use 'gevm settings list' to see available settings.", key)
 		return nil
 	}
 	if err != nil {
@@ -84,7 +84,7 @@ func (s *Service) Get(key string) error {
 }
 
 func (s *Service) Path() error {
-	utils.Printlnf(s.Config.ConfigPath)
+	utils.Println(s.Config.ConfigPath)
 	return nil
 }
 
