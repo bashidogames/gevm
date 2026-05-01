@@ -15,9 +15,9 @@ jobs:
     name: Building ${{ matrix.os }}-${{ matrix.arch }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: Build Project
@@ -28,7 +28,7 @@ jobs:
       - name: Archive Build
         run: cd build && zip ../gevm-${{ matrix.os }}-${{ matrix.arch }}.zip * && cd ..
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
           name: gevm-${{ matrix.os }}-${{ matrix.arch }}.zip
@@ -40,9 +40,9 @@ jobs:
     name: Packaging Windows
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: gevm-windows-amd64.zip
       - name: Extract Build
@@ -50,7 +50,7 @@ jobs:
       - name: Package Build
         run: iscc /dMyAppVersion=${{ github.ref_name }} package-windows.iss
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: gevm-installer.exe
           name: gevm-installer.exe
@@ -62,9 +62,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true
           pattern: gevm-*
