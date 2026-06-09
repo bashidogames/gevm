@@ -12,7 +12,7 @@ Contributions are welcome via pull requests. Not really expecting any contributi
 
 Before you begin, ensure you have the following prerequisites installed:
 
-- [Go v1.22.4](https://go.dev/dl/)
+- [Go v1.26.2](https://go.dev/dl/)
 
 ### Installing Go via vfox
 
@@ -26,10 +26,10 @@ Before you begin, ensure you have the following prerequisites installed:
 
 2. **Install Go:**
 
-   Once vfox is installed, open the terminal and run the following command to install Go version 1.22.4:
+   Once vfox is installed, open the terminal and run the following command to install Go version 1.26.2:
 
    ```
-   vfox install golang@1.22.4
+   vfox install golang@1.26.2
    ```
 
 3. **Set Go version:**
@@ -37,7 +37,7 @@ Before you begin, ensure you have the following prerequisites installed:
    After installing Go, you can set it as the default version:
 
    ```
-   vfox use -g golang@1.22.4
+   vfox use -g golang@1.26.2
    ```
 
 4. **Verify installation:**
